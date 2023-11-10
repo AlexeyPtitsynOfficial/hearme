@@ -1,0 +1,214 @@
+package com.donearh.hearme;
+
+import java.util.ArrayList;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+
+public class FavoriteUsersFilter extends Fragment 
+		implements AdapterView.OnItemSelectedListener,
+		AnimationListener
+{
+
+	private ProgressBar mProgressBar;
+	private Spinner mSpinner;
+	private Integer mSpinnerId = 0;
+	private ArrayList<Integer> mUsersId = new ArrayList<Integer>();
+	private ArrayList<String> mUsersList = new ArrayList<String>();
+	
+	private boolean mIsFilterOpen = true;
+	private Animation closeAnim;
+	private Animation openAnim;
+	
+	private LinearLayout main_layout;
+	private LinearLayout filter_layout;
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+		View rootView = inflater.inflate(R.layout.fragment_favorite_users_filter, container, false);
+		
+		main_layout = (LinearLayout)rootView.findViewById(R.id.main_layout);
+		filter_layout = (LinearLayout)rootView.findViewById(R.id.filter_layout);
+		openAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.open_filter);
+		openAnim.setAnimationListener(this);
+		main_layout.startAnimation(openAnim);
+		/*main_layout.layout(0,
+				150,
+				main_layout.getMeasuredWidth(),
+				100);*/
+		/*android.view.ViewGroup.LayoutParams params = main_layout.getLayoutParams();
+		params.height = 50;
+		main_layout.setLayoutParams(params);*/
+		/*LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                		LinearLayout.LayoutParams.WRAP_CONTENT);
+		params.topMargin = 200;
+		params.
+		main_layout.setLayoutParams(params);*/
+		
+		closeAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.close_filter);
+		closeAnim.setAnimationListener(this);
+		
+		mProgressBar = (ProgressBar)rootView.findViewById(R.id.progressbar);
+		mSpinner = (Spinner)rootView.findViewById(R.id.filter);
+		mSpinner.setVisibility(View.GONE);
+		mUsersList.add("Все");
+		
+		LinearLayout open_hide_btn = (LinearLayout)rootView.findViewById(R.id.hide_open_btn);
+		open_hide_btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(mIsFilterOpen)
+				{
+					main_layout.startAnimation(closeAnim);	
+					mIsFilterOpen = false;
+					/*view.setLayoutParams(...);  // set to (x, y)
+					 
+					// then animate the view translating from (0, 0)
+					TranslationAnimation ta = new TranslateAnimation(-x, -y, 0, 0);
+					ta.setDuration(1000);
+					view.startAnimation(ta);*/
+				}
+				else
+				{
+					main_layout.startAnimation(openAnim);
+					mIsFilterOpen = true;
+				}
+			}
+		});
+		
+		//mUsersId = ((MainControlBarActivity)getActivity()).mSavedData.getUserFavoriteUsers();
+		
+		String mStringArrayUserID = "";
+		for(int i=0; i<mUsersId.size(); i++)
+		{
+			if(mStringArrayUserID == "")
+			{
+				mStringArrayUserID += "?users_ids[]=" + mUsersId.get(i);
+				continue;
+			}
+			mStringArrayUserID += "&users_ids[]=" + mUsersId.get(i);
+		}
+		
+		//((MainControlBarActivity)getActivity()).mStringArrayUserID = mStringArrayUserID;
+		//DownloadData dd = new DownloadData(DownloadData.GET_FAV_USERS_NAMES, getActivity());
+		//dd.execute(getString(R.string.server_address) + "get_fav_users_names.php" + mStringArrayUserID);
+		
+		return rootView;
+	}
+	
+	public void endDowload(ArrayList<String> array)
+	{
+		for(int i=0; i<array.size(); i++)
+		{
+			mUsersList.add(array.get(i));
+		}
+		
+		mProgressBar.setVisibility(View.GONE);
+		mSpinner.setVisibility(View.VISIBLE);
+		ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(getActivity(), 
+				android.R.layout.simple_spinner_item, 
+				mUsersList);
+		
+		SpinnerArrayAdapter adapter = new SpinnerArrayAdapter(getActivity(), R.layout.adapter_spinner, mUsersList);
+		mSpinner.setAdapter(adapter);
+		mSpinner.setSelection(0);
+		mSpinner.setOnItemSelectedListener(this);
+		mSpinner.setId(mSpinnerId);
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int position,
+			long id) {
+		// TODO Auto-generated method stub
+		int count = ((MainControlBarActivity)getActivity()).getAdCountInList();
+		/*if(position == 0)
+		{
+			((MainControlBarActivity)getActivity())
+			    .createDownloadFragment(getString(R.string.server_address)
+			    	+ "get_favorite_users_list.php"
+					+ ((MainControlBarActivity)getActivity()).mStringArrayUserID
+					+ "&start=" + 0
+					+ "&item_count=" + count,
+					getString(R.string.load_data), 
+					DownloadFragment.LOAD_AD_LIST, 
+					getActivity());
+			
+		}
+		else
+		{
+			((MainControlBarActivity)getActivity())
+			    .createDownloadFragment(getString(R.string.server_address) 
+					+ "get_fav_user_ad_list.php"
+					+ "?user_id=" + mUsersId.get(position-1)
+					+ "&start=" + 0
+					+ "&item_count=" + count,
+					getString(R.string.load_data),
+					DownloadFragment.LOAD_AD_LIST,
+					getActivity());
+		}*/
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+		if(animation == closeAnim)
+		{
+			final float scale = getResources().getDisplayMetrics().density;
+			main_layout.layout(main_layout.getLeft(),
+					main_layout.getTop()-(int) (125 * scale + 0.5f),
+					main_layout.getMeasuredWidth(),
+					main_layout.getMeasuredHeight());
+			main_layout.setClickable(false);
+			//main_layout.layout(main_layout.getLeft(), main_layout.getTop() -100, main_layout.getMeasuredWidth(), main_layout.getMeasuredHeight());
+			//main_layout.setClickable(false);
+			/*android.view.ViewGroup.LayoutParams params = main_layout.getLayoutParams();
+			params.height = 0;
+
+			main_layout.setLayoutParams(params);*/
+		}
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// TODO Auto-generated method stub
+		if(animation == openAnim)
+		{
+			final float scale = getResources().getDisplayMetrics().density;
+			main_layout.layout(main_layout.getLeft(),
+					main_layout.getTop()+(int) (110 * scale + 0.5f),
+					main_layout.getMeasuredWidth(),
+					main_layout.getMeasuredHeight());
+		}
+	}
+
+	
+}

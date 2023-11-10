@@ -1,0 +1,49 @@
+Microsoft Windows [Version 6.1.7601]
+(c) Корпорация Майкрософт (Microsoft Corp.), 2009. Все права защищены.
+
+C:\Users\Donearh>cd C:\Program Files\Java\jdk1.7.0_71\bin
+
+C:\Program Files\Java\jdk1.7.0_71\bin>keytool -exportcert -alias androiddebugkey
+ -keystore hearme_key -list -v
+Enter keystore password:
+keytool error: java.lang.Exception: Alias <androiddebugkey> does not exist
+java.lang.Exception: Alias <androiddebugkey> does not exist
+        at sun.security.tools.KeyTool.doPrintEntry(KeyTool.java:1670)
+        at sun.security.tools.KeyTool.doCommands(KeyTool.java:1064)
+        at sun.security.tools.KeyTool.run(KeyTool.java:340)
+        at sun.security.tools.KeyTool.main(KeyTool.java:333)
+
+C:\Program Files\Java\jdk1.7.0_71\bin>keytool -exportcert -alias hearmekey -keys
+tore hearme_key -list -v
+Enter keystore password:
+Alias name: hearmekey
+Creation date: 11.01.2016
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Alexey Ptitsyn, OU=Mobile Development, O=Anodly, L=Yakutsk, ST=Yakutia
+, C=RU
+Issuer: CN=Alexey Ptitsyn, OU=Mobile Development, O=Anodly, L=Yakutsk, ST=Yakuti
+a, C=RU
+Serial number: 51a8c156
+Valid from: Mon Jan 11 21:26:58 YAKT 2016 until: Fri Jan 04 21:26:58 YAKT 2041
+Certificate fingerprints:
+         MD5:  E3:67:31:C8:6B:1F:A6:62:17:BE:3C:E3:C8:BB:1F:6C
+         SHA1: 39:53:94:69:5A:BA:50:8F:22:C7:78:C9:80:09:4F:D3:9C:E1:BB:6F
+         SHA256: 67:54:68:4E:2F:94:CF:84:A4:02:A9:3E:98:C3:EE:C9:DF:C3:CA:B3:87:
+50:BD:00:52:E7:BE:C2:73:12:61:60
+         Signature algorithm name: SHA256withRSA
+         Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 33 66 AF B1 E4 9D A9 08   ED A2 56 99 2B 78 4A 3E  3f........V.+xJ>
+0010: 7C 83 14 6D                                        ...m
+]
+]
+
+
+C:\Program Files\Java\jdk1.7.0_71\bin>

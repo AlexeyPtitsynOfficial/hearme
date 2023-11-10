@@ -1,0 +1,12 @@
+package com.donearh.hearme;
+
+public class AdListData {
+
+	public Integer Id;
+	public String Title;
+	public Integer Category_id;
+	public String Category_name;
+	public String Desc;
+	public String Add_time;
+	public String Add_date;
+}

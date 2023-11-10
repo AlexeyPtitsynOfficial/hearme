@@ -1,0 +1,124 @@
+package com.donearh.hearme;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.ParseException;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+
+public class FragmentImageHolder extends Fragment
+{
+	private static final String ARG_SECTION_NUMBER = "section_number";
+	private static final String IMAGE_URL = "image_url";
+	
+	private ImageView mImageView;
+	private BitmapDrawable mImage;
+	private String mimageUrl;
+	
+	public static FragmentImageHolder newInstance(int sectionNumber, String url)
+	{
+		FragmentImageHolder fragment = new FragmentImageHolder();
+		Bundle args = new Bundle();
+		args.putString(IMAGE_URL, url);
+		args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+		fragment.setArguments(args);
+		return fragment;
+	}
+	
+	public FragmentImageHolder() 
+	{
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) 
+	{
+		View rootView = inflater.inflate(R.layout.fragment_image_slider,
+				container, false);
+		
+		mimageUrl = getArguments().getString(IMAGE_URL);
+		mImageView = (ImageView)rootView.findViewById(R.id.slider_glossy);
+		//imageView.setImageResource(R.drawable.slider_glossy);
+		//imageView.setBackgroundResource(R.drawable.slider_image);
+		if(mImage == null)
+			new DownloadImage().execute(mimageUrl);
+		
+		
+		return rootView;
+	}
+	
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation") 
+	private class DownloadImage extends AsyncTask<String, Void, Object>
+	{
+		@Override
+		protected Object doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			//http post
+			try
+			{
+				URL url = new URL(params[0]);
+				Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+				mImage = new BitmapDrawable(getActivity().getResources(), bitmap);
+			}
+			catch(Exception e)
+			{
+			   Log.e("doni_error", "Error in http connection"+e.toString());
+			   return "no_internet";
+			}
+			return "success";
+		}
+		
+		protected void onPostExecute(Object result) {
+	          // Pass the result data back to the main activity
+	  	 
+	      	if(result == "no_internet")
+	      	{
+	      		//errorView(getString(R.string.no_connection));
+	      	}
+	      	if(result == "sql_error")
+	      	{
+	      		
+	      	}
+	      	else if(result == "success")
+	      	{
+	      		int sdk = android.os.Build.VERSION.SDK_INT;
+	      		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+	      		    mImageView.setBackgroundDrawable(mImage);
+	      		} else {
+	      			mImageView.setBackground(mImage);
+	      		}
+	  		}
+	      		
+	     }
+		
+	}
+}

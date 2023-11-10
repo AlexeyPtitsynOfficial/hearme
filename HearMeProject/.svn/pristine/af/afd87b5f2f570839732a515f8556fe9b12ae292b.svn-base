@@ -1,0 +1,172 @@
+package com.donearh.hearme.library;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONObject;
+
+import com.donearh.hearme.AdKeys;
+import com.donearh.hearme.CategoryData;
+import com.donearh.hearme.keys.MainDataKeys;
+import com.donearh.hearme.datatypes.AreaData;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.database.sqlite.SQLiteOpenHelper;
+
+public class MainDatabaseHandler extends SQLiteOpenHelper{
+
+	private static final int DATABASE_VERSION = 1;
+	private static final String DATABASE_NAME = "main_data";
+	private static final String AREA_TABLE = "area_table";
+	private static final String CATEGORY_TABLE = "category_table";
+	
+	SQLiteDatabase db;
+	
+	
+	public MainDatabaseHandler(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// TODO Auto-generated method stub
+		String CREATE_AREA_TABLE = "CREATE TABLE " + AREA_TABLE + "("
+				+ MainDataKeys.AREA_ID + " INTEGER PRIMARY KEY,"
+				+ MainDataKeys.AREA_NAME + " TEXT" + ")";
+		db.execSQL(CREATE_AREA_TABLE);
+				
+		String CREATE_CATEGORY_TABLE = "CREATE TABLE " + CATEGORY_TABLE + "("
+				+ MainDataKeys.CATEGORY_ID + " INTEGER PRIMARY KEY," 
+				+ MainDataKeys.CATEGORY_NAME + " TEXT,"
+				+ MainDataKeys.CATEGORY_PARENT_ID + " INTEGER,"
+				+ MainDataKeys.CATEGORY_COLOR_ID + " INTEGER,"
+				+ MainDataKeys.CATEGORY_HAS_CHILD + " INTEGER" + ")";
+		db.execSQL(CREATE_CATEGORY_TABLE);
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+		db.execSQL("DROP TABLE IF EXISTS " + AREA_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE);
+		onCreate(db);
+	}
+	
+	public void closeDB()
+	{
+		db.close();
+		db = null;
+	}
+	
+	public void getWriteDatabase()
+	{
+		db = this.getWritableDatabase();
+	}
+	public void addAreaData(Integer area_id, String area_name)
+	{
+		ContentValues values = new ContentValues();
+		values.put(MainDataKeys.AREA_ID, area_id);
+		values.put(MainDataKeys.AREA_NAME, area_name);
+		db.insert(AREA_TABLE, null, values);
+	}
+	
+	public void addCategoryData(Integer id,
+								String name,
+								Integer parent_id,
+								Integer color_id,
+								Integer has_child)
+	{
+		ContentValues values = new ContentValues();
+		values.put(MainDataKeys.CATEGORY_ID, id);
+		values.put(MainDataKeys.CATEGORY_NAME, name);
+		values.put(MainDataKeys.CATEGORY_PARENT_ID, parent_id);
+		values.put(MainDataKeys.CATEGORY_COLOR_ID, color_id);
+		values.put(MainDataKeys.CATEGORY_HAS_CHILD, has_child);
+		db.insert(CATEGORY_TABLE, null, values);
+	}
+	
+	public int getAreaRowCount()
+	{
+		String countQuery = "SELECT * FROM " + AREA_TABLE;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(countQuery, null);
+		int rowCount = cursor.getCount();
+		db.close();
+		cursor.close();
+		
+		return rowCount;
+	}
+	
+	public int getCategoryRowCount()
+	{
+		String countQuery = "SELECT * FROM " + CATEGORY_TABLE;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(countQuery, null);
+		int rowCount = cursor.getCount();
+		db.close();
+		cursor.close();
+		
+		return rowCount;
+	}
+	
+	public ArrayList<AreaData> getAreaData()
+	{
+		String selectQuery = "SELECT * FROM " + AREA_TABLE;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		ArrayList<AreaData> areaData = new ArrayList<AreaData>();
+		cursor.moveToFirst();
+		
+		for(int i=0; i<cursor.getCount(); i++)
+		{
+			AreaData data = new AreaData();
+			data.id = cursor.getInt(0);
+			data.name = cursor.getString(1);
+			areaData.add(data);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		db.close();
+		
+		return areaData;
+	}
+	
+	public ArrayList<CategoryData> getCategoryData()
+	{
+		String selectQuery = "SELECT * FROM " + CATEGORY_TABLE;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		ArrayList<CategoryData> categoryData = new ArrayList<CategoryData>();
+		cursor.moveToFirst();
+		
+		for(int i=0; i<cursor.getCount(); i++)
+		{
+			CategoryData data = new CategoryData();
+			data.Id = cursor.getInt(0);
+			data.Name = cursor.getString(1);
+			data.ParentId = cursor.getInt(2);
+			data.color_id = cursor.getInt(3);
+			data.hasChild = cursor.getInt(4);
+			categoryData.add(data);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		db.close();
+		
+		return categoryData;
+	}
+	public void resetTables()
+	{
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		db.delete(AREA_TABLE, null, null);
+		db.close();
+	}
+	
+
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/card_bg"
+    android:gravity="center"
+    android:fillViewport="true" >
+    <com.donearh.hearme.ObservableListView 
+        android:id="@+id/listview"
+        android:cacheColorHint="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:layout_gravity="center"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:dividerHeight="4dp"
+        ></com.donearh.hearme.ObservableListView>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -1,0 +1,495 @@
+package com.donearh.hearme;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.content.Context;
+import android.net.ParseException;
+import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+public class AdDetailsActivity extends ActionBarActivity {
+
+	private ArrayList<PlaceholderFragment> mFragArray = new ArrayList<AdDetailsActivity.PlaceholderFragment>();
+	private int mPos;
+	private int mPage;
+	private int mItemCount;
+	private int mType;
+	public static ArrayList<AdListData> mAdListData = new ArrayList<AdListData>();
+	SectionsPagerAdapter mSectionsPagerAdapter;
+
+	ViewPager mViewPager;
+	
+	private EditText mCommentEdit;
+	private Button mCommentBtn;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_ad_details);
+
+		mType = getIntent().getIntExtra("type", -1);
+		mPos = getIntent().getIntExtra("ad_pos", -1);
+		mPage = getIntent().getIntExtra("page", -1);
+		mItemCount = getIntent().getIntExtra("item_count", -1);
+		
+		mAdListData = (ArrayList<AdListData>)getIntent().getSerializableExtra("ad_data");
+		// Create the adapter that will return a fragment for each of the three
+		// primary sections of the activity.
+		mSectionsPagerAdapter = new SectionsPagerAdapter(
+				getSupportFragmentManager());
+		// Set up the ViewPager with the sections adapter.
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setCurrentItem(mPos);
+		
+		mCommentEdit = (EditText)findViewById(R.id.comment_edit);
+		mCommentBtn = (Button)findViewById(R.id.comment_btn);
+		mCommentBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				String str = mCommentEdit.getText().toString();
+				String encode_Str="";
+				if(!str.equals(""))
+				{
+					try {
+						encode_Str = URLEncoder.encode(str,"UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					mCommentEdit.setText("");
+					int pos =mSectionsPagerAdapter.getCurrentPos();
+					InsertData insert = new InsertData(AdDetailsActivity.this,
+							InsertData.ADD_COMMENT);
+					insert.execute(getString(R.string.server_address) + "comment_add.php"
+							+"?ad_id=" + mAdListData.get(pos).Id
+							+"&user_id=" + mAdListData.get(pos).User_id
+							+"&comment_text=" + encode_Str
+							+"&comment_rate=" +0);
+				}
+			}
+		});
+
+	}
+	
+	public void setMoreData(ArrayList<AdListData> data)
+	{
+		for(int i=0; i<data.size(); i++)
+		{
+			mAdListData.add(data.get(i));
+		}
+		
+		mSectionsPagerAdapter.notifyDataSetChanged();
+		//mContent.setVisibility(View.VISIBLE);
+	}
+
+	public void updateAdapter()
+	{
+		PlaceholderFragment fragment = mSectionsPagerAdapter.getCurrentFragment();
+		fragment.loadData();
+	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.ad_details, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * one of the sections/tabs/pages.
+	 */
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+		private PlaceholderFragment mCurrentFragment;
+		public SectionsPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		public PlaceholderFragment getCurrentFragment() {
+            return mCurrentFragment;
+        }
+		
+		public int getCurrentPos()
+		{
+			return mCurrentFragment.mSecPos;
+		}
+
+		@Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            if (getCurrentFragment() != object) {
+                mCurrentFragment = ((PlaceholderFragment) object);
+            }
+            super.setPrimaryItem(container, position, object);
+        }
+		
+		@Override
+		public Fragment getItem(int position) {
+			// getItem is called to instantiate the fragment for the given page.
+			// Return a PlaceholderFragment (defined as a static inner class
+			// below).
+			Integer size = mAdListData.size();
+			Integer check = position+1;
+			if(size.equals(check))
+			{
+				mPage += 1;
+				int count = mItemCount;
+				int start = 0;
+				if(mPage != 0)
+				{
+					start = mPage * count - count;
+				}
+				DownloadData dd = new DownloadData(DownloadData.GET_MORE_AD_DETAILS, AdDetailsActivity.this);
+				String str = getString(R.string.server_address);
+				switch (mType) {
+				case DrawerListAdapter.AD_ALL:
+					str += "get_ad_list.php?fake=1";
+					break;
+				/*case DrawerListAdapter.SIMPLE_SEARCH:
+					str += "get_main_search_result.php"
+							+ "?search_text=" + ((MainControlBarActivity)getActivity()).getMainSearchText();
+					break;
+				case DrawerListAdapter.AD_MY:
+					str += "get_my_ad_list.php"
+							+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId();
+					break;
+				case DrawerListAdapter.AD_FAVORITE_USERS:
+					str += "get_favorite_users_list.php"
+					+ ((MainControlBarActivity)getActivity()).mStringArrayUserID;
+					break;
+				case DrawerListAdapter.AD_FAVORITE:
+					str += "get_favorite_ad_list.php"
+					+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId()
+					+ ((MainControlBarActivity)getActivity()).mStringArrayAdID;
+					break;*/
+				default:
+					break;
+				}
+				//dd.execute(str + "&start=" + start
+				//		+ "&item_count=" + count);
+				
+				return PlaceholderFragment.newInstance(mAdListData.size()-1);
+			}
+			else
+			{
+				return PlaceholderFragment.newInstance(position);
+			}
+		}
+
+		@Override
+		public int getCount() {
+			// Show 3 total pages.
+			return mAdListData.size();
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			Locale l = Locale.getDefault();
+			
+			return "text";//mAdListData.get(position).Title;
+		}
+		
+	}
+
+	/**
+	 * A placeholder fragment containing a simple view.
+	 */
+	public static class PlaceholderFragment extends Fragment {
+		/**
+		 * The fragment argument representing the section number for this
+		 * fragment.
+		 */
+		private static final String ARG_SECTION_NUMBER = "section_number";
+		
+		private View mTopView;
+		private View mBottomLoadCircle;
+		
+		public ListView mCommentsListView;
+		public int mSecPos;
+		
+		public CommentsAdapter mCommentsAdapter;
+		
+		private ArrayList<CommentData> mCommentData = new ArrayList<CommentData>();
+
+		/**
+		 * Returns a new instance of this fragment for the given section number.
+		 */
+		public static PlaceholderFragment newInstance(int sectionNumber) {
+			PlaceholderFragment fragment = new PlaceholderFragment();
+			Bundle args = new Bundle();
+			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+			fragment.setArguments(args);
+			return fragment;
+		}
+
+		public PlaceholderFragment() {
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_ad_details,
+					container, false);
+			
+			mTopView = LayoutInflater.from(getActivity()).inflate(R.layout.ad_info, null);
+			mBottomLoadCircle = LayoutInflater.from(getActivity()).inflate(R.layout.bottom_load_circle, null);
+			mSecPos = getArguments().getInt(ARG_SECTION_NUMBER);
+			mCommentsListView = (ListView)rootView.findViewById(R.id.comments_listview);
+			mCommentsListView.addHeaderView(mTopView);
+			mCommentsListView.addFooterView(mBottomLoadCircle);
+			
+			////////////TOP AD INFO
+			TextView adTitle = (TextView)mTopView.findViewById(R.id.ad_title);
+			adTitle.setText(mAdListData.get(mSecPos).Title);
+			
+			WebView webview = (WebView)mTopView.findViewById(R.id.webview);
+			String text = "<html><body>"
+	  	            + "<p align=\"justify\">"
+	  	             + mAdListData.get(mSecPos).Desc
+	  	            + "</p> "
+	  	             + "</body></html>";
+	    	 webview.loadDataWithBaseURL("", text, "text/html", "utf-8", "");
+	    	 
+			mCommentsAdapter = new CommentsAdapter(getActivity());
+			mCommentsListView.setAdapter(mCommentsAdapter);
+			
+			loadData();
+		    	 
+			return rootView;
+		}
+		
+		public void loadData()
+		{
+			DownloadComments dd = new DownloadComments();
+			dd.execute(getString(R.string.server_address) + "get_ad_comments.php"
+					+ "?ad_id=" + mAdListData.get(mSecPos).Id);
+		}
+		
+		private class CommentsAdapter extends BaseAdapter
+		{
+			private Context mContext;
+			public CommentsAdapter(Context context) {
+	            super();
+	            mContext = context;
+			}
+
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return mCommentData.size();
+			}
+			
+			private class ViewHolder
+			{
+				TextView user_name;
+				TextView comment_text;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				// TODO Auto-generated method stub
+				ViewHolder viewHolder;
+				if(convertView == null)
+				{
+					viewHolder = new ViewHolder();
+					convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_comments, null);
+					
+					viewHolder.user_name = (TextView)convertView.findViewById(R.id.user_name);
+					viewHolder.comment_text = (TextView)convertView.findViewById(R.id.comment_text);
+					
+					convertView.setTag(viewHolder);
+				}
+				else
+				{
+					viewHolder = (ViewHolder)convertView.getTag();
+				}
+				
+				viewHolder.user_name.setText(mCommentData.get(position).user_name);
+				viewHolder.comment_text.setText(mCommentData.get(position).text);
+				return convertView;
+			}
+
+			@Override
+			public Object getItem(int position) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public long getItemId(int position) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+		}
+		
+		private class DownloadComments extends AsyncTask<String, Void, Object>
+		{
+
+			private JSONArray jArray;
+			private String result = null;
+			private InputStream is = null;
+			private StringBuilder sb = null;
+			
+			@Override
+			protected Object doInBackground(String... params) {
+				// TODO Auto-generated method stub
+				ArrayList nameValuePairs = new ArrayList();
+				//http post
+				try
+				{
+				     HttpClient httpclient = new DefaultHttpClient();
+				     String url = params[0];
+				     HttpPost httppost = new HttpPost(url);
+				     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				     HttpResponse response = httpclient.execute(httppost);
+				     HttpEntity entity = response.getEntity();
+				     is = entity.getContent();
+				}
+				catch(Exception e)
+				{
+				   Log.e("doni_error", "Error in http connection"+e.toString());
+				   return "no_internet";
+				}
+				
+				nameValuePairs = null;
+				
+				//convert response to string
+				try
+				{
+				  BufferedReader reader = new BufferedReader(new InputStreamReader(is,HTTP.UTF_8));
+				  sb = new StringBuilder();
+				  sb.append(reader.readLine() + "\n");
+
+				  String line="0";
+				  while ((line = reader.readLine()) != null) 
+				  {
+				      sb.append(line + "\n");
+				  }
+				  is.close();
+				  result=sb.toString();
+				}
+				catch(Exception e)
+				{
+					
+				   Log.e("doni_error", "Error converting result "+e.toString());
+				   return "sql_error";
+				}
+				
+				//paring data
+				
+				try
+				{
+				      jArray = new JSONArray(result);
+				      JSONObject json_data=null;
+				      mCommentData.clear();
+				      for(int i=0;i<jArray.length();i++)
+				      {
+				    	  json_data = jArray.getJSONObject(i);
+				    	  
+				    	  CommentData data = new CommentData();
+				    	  data.id = json_data.getInt("comment_id");
+				    	  data.ad_id = json_data.getInt("ad_id");
+				    	  data.user_id = json_data.getInt("user_id");
+				    	  data.user_name = json_data.getString("user_login");
+				    	  data.text = json_data.getString("comment_text");
+				    	  data.time = json_data.getString("comment_time");
+				    	  data.rate = json_data.getInt("comment_rate");
+				    	  mCommentData.add(data);
+				      }
+				      
+				      
+				}
+				catch(JSONException e1)
+				{
+					Log.e("doni_error", "SQL ERROR RESULT = " + result);
+				    return "sql_error";
+				} 
+				catch (ParseException e1) 
+				{
+							e1.printStackTrace();
+				}
+				jArray = null;
+				result = null;
+				is = null;
+				sb=null;
+				return "success";
+			}
+
+			@Override
+			protected void onPostExecute(Object result) {
+				// TODO Auto-generated method stub
+				if(result == "no_internet")
+		    	{
+		    		
+		    	}
+		    	if(result == "sql_error")
+		    	{
+		    		
+		    		
+		    	}
+		    	else if(result == "success")
+		    	{
+		    		mCommentsListView.removeFooterView(mBottomLoadCircle);
+		    		mCommentsAdapter.notifyDataSetChanged();
+		    	}
+			}
+			
+		}
+	}
+
+}

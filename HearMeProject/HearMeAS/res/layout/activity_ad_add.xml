@@ -1,0 +1,171 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    >
+
+    <ScrollView
+        android:id="@+id/scroller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="70dp"
+        android:scrollbars="none"
+        >
+	    <LinearLayout 
+	        android:id="@+id/layout"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:gravity="left"
+	        android:padding="20dp"
+	        >
+		    <TextView
+		        android:id="@+id/ad_title"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/ad_title"
+		        android:textColor="@color/night_green"
+		        android:textStyle="bold"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+		    <EditText
+		        android:id="@+id/edit_title"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:ems="10"
+		        android:maxLength="50"
+		        android:inputType="text" >
+		        <requestFocus />
+		    </EditText>
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:text="Тип объявления"
+		        android:textColor="@color/night_green"
+		        android:textStyle="bold"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+			<RadioGroup
+			    android:id="@+id/radio_ad_type"
+			    android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+			    >
+			    <RadioButton 
+			        android:id="@+id/free"
+			        android:layout_width="wrap_content"
+		       	 	android:layout_height="wrap_content"
+		       	 	android:text="Бесплатное"
+		       	 	android:checked="true"
+			        />
+			    <RadioButton 
+			        android:id="@+id/pay"
+			        android:layout_width="wrap_content"
+		       	 	android:layout_height="wrap_content"
+		       	 	android:text="Платное"
+			        />
+			</RadioGroup>
+		    <TextView
+		        android:id="@+id/area_text"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:text="@string/area_type"
+		        android:textColor="@color/night_green"
+		        android:textStyle="bold"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    <Spinner
+		        android:id="@+id/spinner_area"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:prompt="@string/ad_type"/>
+		    
+		    <TextView
+		        android:id="@+id/ad_category_text"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:text="@string/ad_type"
+		        android:textColor="@color/night_green"
+		        android:textStyle="bold"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    <Spinner
+		        android:id="@+id/spinner1"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" 
+		        android:prompt="@string/ad_type"/>
+		    
+		    <TextView
+		        android:id="@+id/ad_main_text"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:text="@string/ad_desc"
+		        android:textColor="@color/night_green"
+		        android:textStyle="bold"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+		    <EditText
+		        android:id="@+id/edit_ad_desc"
+		        android:layout_width="match_parent"
+		        android:layout_height="200dp"
+		        android:ems="10"
+		        android:gravity="top"
+		        android:inputType="textMultiLine" />
+		    
+		    <TextView
+		        android:id="@+id/imade_add_text"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:text="@string/ad_image"
+		        android:textColor="@color/night_green"
+		        android:textStyle="bold"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+	    	<LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:gravity="center_vertical"
+		            android:orientation="horizontal" >
+			        
+			    <com.donearh.hearme.CustomImageScroller
+			        android:id="@+id/image_scroller"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        >
+			        <LinearLayout
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:orientation="horizontal" >
+			        </LinearLayout>
+			    </com.donearh.hearme.CustomImageScroller>
+		    	<Button 
+			        android:id="@+id/image_add_btn"
+			        android:layout_width="70dp"
+			        android:layout_height="70dp"
+			        android:layout_margin="10dp"
+			        android:background="@drawable/selector_circle_button2"
+			        />
+	    	</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="70dp"
+	    android:layout_alignParentBottom="true"
+	    android:gravity="center" >
+
+	    <Button 
+	        android:id="@+id/confirm_add"
+	        android:layout_width="200dp"
+	    	android:layout_height="50dp"
+	    	android:textColor="@android:color/white"
+	    	android:textSize="14sp"
+	    	android:textStyle="bold"
+	    	android:text="@string/btn_add"
+	    	android:background="@drawable/selector_button"
+	        />
+	    
+	</LinearLayout>
+</RelativeLayout>

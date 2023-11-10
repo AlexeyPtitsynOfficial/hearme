@@ -1,0 +1,10 @@
+package com.donearh.hearme;
+
+public class AdTags {
+	
+	public static String get_ad_list_tag = "get_ad_list";
+	public static String get_main_data = "get_main_data";
+	public static String get_slider_urls = "get_slider_urls";
+	public static String search_ad = "search_ad";
+
+}

@@ -1,0 +1,12 @@
+package com.donearh.hearme;
+
+import android.content.res.Resources;
+
+public class Urls {
+
+	public static String mRegisterURL = "http://192.168.10.150/yakutskhearme.com/login_api/index.php";
+	public static String AD_API = "ad_api/index.php";
+	public static String AD_IMAGE_UPLOAD = "ad_api/upload_images.php";
+	public static String MAIN_DATA = "get_main_data.php";
+	public static String AD_ADD = "ad_add.php";
+}

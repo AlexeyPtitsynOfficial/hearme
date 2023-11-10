@@ -1,0 +1,76 @@
+package com.donearh.hearme;
+
+import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+
+public class InsertData extends AsyncTask<String, Void, Object>{
+	
+	public static final int NOT_MATTER = 0;
+	public static final int ADD_COMMENT = 1;
+	private Context mContext;
+	private Long mUserID;
+	private Long mAdID;
+	private int mInsertType;
+	
+	public InsertData(Context context, int insert_type)
+	{
+		mInsertType = insert_type;
+		mContext = context;
+	}
+	
+	@Override
+	protected Object doInBackground(String... params) 
+	{
+		// TODO Auto-generated method stub
+		ArrayList nameValuePairs = new ArrayList();
+		//http post
+		try
+		{
+		     HttpClient httpclient = new DefaultHttpClient();
+		     String url = params[0];
+		     HttpPost httppost = new HttpPost(url);
+		     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		     HttpResponse response = httpclient.execute(httppost);
+		     HttpEntity entity = response.getEntity();
+		     entity.getContent();
+		}
+		catch(Exception e)
+		{
+		   Log.e("doni_error", "Error in http connection"+e.toString());
+		   return "no_internet";
+		}
+		
+		return "success";
+	}
+	
+	protected void onPostExecute(Object result) {
+        // Pass the result data back to the main activity
+	 
+    	if(result == "no_internet")
+    	{
+    		//errorView(getString(R.string.no_connection));
+    	}
+    	else if(result == "success")
+    	{
+    		switch (mInsertType) {
+			case ADD_COMMENT:
+				((AdDetailsActivity)mContext).updateAdapter();
+				break;
+
+			default:
+				break;
+			}
+    		
+    	}
+    }
+}

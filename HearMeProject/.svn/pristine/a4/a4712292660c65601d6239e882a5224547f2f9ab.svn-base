@@ -1,0 +1,407 @@
+package com.donearh.hearme;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.donearh.hearme.library.DatabaseHandler;
+import com.donearh.hearme.library.JSONArrayParser;
+import com.donearh.hearme.library.JSONArrayParser.GetJSONArrayListener;
+import com.donearh.hearme.library.JSONParser;
+import com.donearh.hearme.library.JSONParser.GetJSONListener;
+import com.donearh.hearme.library.UserFunctions.UserLoginListener;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ParseException;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+public class DownloadFragment extends Fragment implements AnimationListener
+{
+	
+	static final int LOAD_AD_LIST = 2;
+	static final int LOAD_CATEGORY = 4;
+	static final int GET_FAVORITE_ADS = 5;
+	static final int GET_FAVORITE_USERS = 6;
+	static final int MAIN_SEARCH = 7;
+	
+	private DownloadD mDownloadData;
+	private Animation animStartScale;
+	
+	private View mCircle;
+	private View mBackCircle;
+	
+	private String mCircleText;
+	
+	private Context mContext;
+	private int mLoadType;
+	private JSONArray jArray;
+	private String result = null;
+	private InputStream is = null;
+	private StringBuilder sb = null;
+	
+	private ArrayList<DownloadD> mDownloadDatas = new ArrayList<DownloadFragment.DownloadD>();
+	private ArrayList<AdListData> mAdListData = new ArrayList<AdListData>();
+	
+	private ArrayList<Integer> mIntegerArray;
+	private ArrayList<URLWithParams> mArrayUrl = new ArrayList<URLWithParams>();
+	
+	private URLWithParams mUrlWithParams;
+	DownloadCompleteListener mDownloadCompleteListener;
+	
+	public interface DownloadCompleteListener
+	{
+		public void getDownloadCompleteState(ArrayList<? extends Object> data);
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		mUrlWithParams = new URLWithParams();
+		super.onCreate(savedInstanceState);
+	}
+	
+	public void setListener(DownloadCompleteListener listener)
+	{
+		this.mDownloadCompleteListener = listener;
+	}
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState)
+	{
+		//mCircleText = getArguments().getString("circle_text");
+		View rootView = inflater.inflate(R.layout.circle, container, false);
+		
+		RelativeLayout layout = (RelativeLayout)rootView.findViewById(R.id.circle_layout);
+		Animation a1 = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+		layout.startAnimation(a1);
+		
+		mBackCircle = (View)rootView.findViewById(R.id.gr_back_circle);
+		mCircle = (View)rootView.findViewById(R.id.gr_circle);
+		
+		animStartScale = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_start_anim);
+		animStartScale.setAnimationListener(this);
+		mBackCircle.startAnimation(animStartScale);
+		mCircle.startAnimation(animStartScale);
+		
+		TextView tv = (TextView)rootView.findViewById(R.id.circle_text);
+		tv.setText(mCircleText);
+	    
+		return rootView;
+	}
+	
+	@Override
+    public void onResume() {
+        super.onResume();
+        //if(mDownloadData.isCancelled())
+        //	mDownloadData.execute(mUrl);
+        for(int i=0; i<mDownloadDatas.size(); i++)
+        {
+        	if(mDownloadDatas.get(i).isCancelled())
+        	{
+        		mDownloadDatas.get(i).execute(mArrayUrl.get(i));
+        	}
+        }
+    }
+	
+	@Override
+    public void onPause() {
+        super.onPause();
+       //mDownloadData.cancel(true);
+        for(int i=0; i<mDownloadDatas.size(); i++)
+        {
+        	mDownloadDatas.get(i).cancel(true);
+        }
+    }
+	
+	@Override
+    public void onDestroy() {
+        super.onDestroy();
+        //mDownloadData = null;
+        mDownloadDatas.clear();
+        mDownloadDatas = null;
+        
+        //mAdListData.clear();
+        //mAdListData = null;
+       // mLongArray.clear();
+       // mLongArray = null;
+    }
+	
+	public boolean ResetTable(Context context)
+	{
+		DatabaseHandler db = new DatabaseHandler(context);
+		db.resetTables();
+		return true;
+	}
+	
+	public void startDownload(URLWithParams params, String text, int type, Context context)
+	{
+		mArrayUrl.add(params);
+		mCircleText = text;
+		mLoadType = type;
+		
+		//mDownloadData = new DownloadD();
+		//mDownloadData.execute(mUrl);
+		DownloadD download = new DownloadD();
+		mDownloadDatas.add(download);
+		
+		int index = mDownloadDatas.size()-1;
+		mDownloadDatas.get(index).setIndex(index);
+		mDownloadDatas.get(index).setType(type);
+		mDownloadDatas.get(index).execute(params);
+	}
+	private class DownloadD extends AsyncTask<URLWithParams, Void, ArrayList<? extends Object>>
+	{
+		private int mIndex;
+		private int mType;
+		
+		public void setIndex(int ind)
+		{
+			mIndex = ind;
+		}
+		
+		public void setType(int type)
+		{
+			mType = type;
+		}
+		
+		public int getIndex()
+		{
+			return mIndex;
+		}
+		@Override
+		protected ArrayList<? extends Object> doInBackground(URLWithParams... params) {
+			// TODO Auto-generated method stub
+			if(isCancelled())
+			{
+				return null;
+			}
+			else
+			{
+			//http post
+			try
+			{
+			     HttpClient httpclient = new DefaultHttpClient();
+			     String url = params[0].url;
+			     HttpPost httppost = new HttpPost(url);
+			     httppost.setEntity(new UrlEncodedFormEntity(params[0].nameValuePairs));
+			     HttpResponse response = httpclient.execute(httppost);
+			     HttpEntity entity = response.getEntity();
+			     is = entity.getContent();
+			}
+			catch(Exception e)
+			{
+			   Log.e("doni_error", "Error in http connection"+e.toString());
+			   return null;
+			}
+			
+			//convert response to string
+			try
+			{
+			  BufferedReader reader = new BufferedReader(new InputStreamReader(is,HTTP.UTF_8));
+			  sb = new StringBuilder();
+			  sb.append(reader.readLine() + "\n");
+
+			  String line="0";
+			  while ((line = reader.readLine()) != null) 
+			  {
+			      sb.append(line + "\n");
+			  }
+			  is.close();
+			  result=sb.toString();
+			}
+			catch(Exception e)
+			{
+			   Log.e("doni_error", "Error converting result "+e.toString());
+			   return null;
+			}
+			
+			//paring data
+			mIntegerArray = new ArrayList<Integer>();
+			try
+			{			
+			      jArray = new JSONArray(result);
+			      JSONObject json_data=null;
+			      for(int i=0;i<jArray.length();i++)
+			      {
+			    	  json_data = jArray.getJSONObject(i);
+
+			    	  if(mType == GET_FAVORITE_ADS)
+			    	  {
+			    		  mIntegerArray.add(json_data.getInt("ad_id"));
+			    	  }
+			    	  else if(mType == GET_FAVORITE_USERS)
+			    	  {
+			    		  mIntegerArray.add(json_data.getInt("favorite_user_id"));
+			    	  }
+			    	  else if(mType == LOAD_AD_LIST || mType == MAIN_SEARCH)
+			    	  {
+			    		  AdListData data = new AdListData();
+			    		  data.Id = json_data.getInt("ad_uid");
+			    		  data.User_id = json_data.getInt("user_id");
+			    		  data.Title = json_data.getString("ad_title");
+			    		  data.Category_id = json_data.getInt("ad_category");
+			    		  data.Category_name = json_data.getString("category_name");
+			    		  data.Desc = json_data.getString("ad_desc");
+			    		  data.Add_time = json_data.getString("ad_add_time");
+			    		  data.Add_date = json_data.getString("ad_add_date");
+			    		  data.user_image_url = json_data.getString("user_image_url");
+			    		  
+			    		  mAdListData.add(data);
+			    	  }
+			      }
+			}
+			catch(JSONException e1)
+			{
+				Log.e("doni_error", "SQL ERROR RESULT = " + result);
+			    return null;
+			} 
+			catch (ParseException e1) 
+			{
+						e1.printStackTrace();
+			}
+			
+			jArray = null;
+			result = null;
+			is = null;
+			sb=null;
+			return mAdListData;
+			}
+		}
+		protected void onPostExecute(ArrayList<? extends Object> result) {
+	        // Pass the result data back to the main activity
+			mDownloadCompleteListener.getDownloadCompleteState(result);
+			for(int i=0; i<mDownloadDatas.size(); i++)
+	    	{
+	    		int idx = mDownloadDatas.get(i).getIndex();
+	    		if(idx > mIndex)
+	    			mDownloadDatas.get(i).setIndex(idx - 1);
+	    	}
+	    	mArrayUrl.remove(mIndex);
+	    	mDownloadDatas.remove(mIndex);
+	    	if(mDownloadDatas.size() == 0)
+	    	{
+	    		if(getActivity() != null)
+	    		{
+	    			((MainControlBarActivity)getActivity()).setNull();
+	    		}
+	    	}
+			
+			/*if(result == null)
+				Log.e("doni", "RES NULLL");
+	    	if(result == "no_internet")
+	    	{
+	    		Log.e("doni", "inet error");
+	    		((MainControlBarActivity)getActivity()).connectFailed();
+	    	}
+	    	if(result == "sql_error")
+	    	{
+	    		switch (mLoadType) {
+				case LOAD_AD_LIST:
+					((MainControlBarActivity)getActivity()).selectItem(DrawerListAdapter.AD_ALL);
+					break;
+				default:
+					break;
+				}
+	    		//errorView(getString(R.string.error_load_data));
+	    	}
+	    	else if(result == "success")
+	    	{
+	    		switch (mType) {
+				case GET_FAVORITE_ADS:
+					if(mIntegerArray.size() != 0)
+						((MainControlBarActivity)getActivity()).mSavedData.saveFavoriteAds(mIntegerArray);
+					break;
+				case GET_FAVORITE_USERS:
+					if(mIntegerArray.size() != 0)
+						((MainControlBarActivity)getActivity()).mSavedData.saveFavoriteUsers(mIntegerArray);
+					break;
+				case LOAD_AD_LIST:
+					((MainControlBarActivity)getActivity()).setMainPageData(mAdListData);
+					break;
+				case MAIN_SEARCH:
+					((MainControlBarActivity)getActivity()).setMainPageData(mAdListData);
+					break;
+				case LOAD_CATEGORY:
+					
+					break;
+				default:
+					break;
+				}
+	    		
+	    	}
+	    	
+	    	for(int i=0; i<mDownloadDatas.size(); i++)
+	    	{
+	    		int idx = mDownloadDatas.get(i).getIndex();
+	    		if(idx > mIndex)
+	    			mDownloadDatas.get(i).setIndex(idx - 1);
+	    	}
+	    	mArrayUrl.remove(mIndex);
+	    	mDownloadDatas.remove(mIndex);
+	    	if(mDownloadDatas.size() == 0)
+	    	{
+	    		if(getActivity() != null)
+	    		{
+	    			((MainControlBarActivity)getActivity()).setNull();
+	    		}
+	    	}*/
+		}
+		
+		@Override
+	    protected void onCancelled() {
+	      super.onCancelled();
+	      Log.i("doni", "cancel");
+		}
+		
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+		if (animation == animStartScale) 
+		{
+			Animation a = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_anim);
+			mBackCircle.startAnimation(a);
+		}
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationStart(Animation arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+}

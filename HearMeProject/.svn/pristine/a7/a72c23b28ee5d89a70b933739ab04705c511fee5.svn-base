@@ -1,0 +1,697 @@
+package com.donearh.hearme;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import com.donearh.hearme.DrawerListAdapter.RowType;
+
+import android.app.Dialog;
+import android.app.Fragment;
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainControlBarActivity extends ActionBarActivity implements AnimationListener
+{
+
+	static final int REGISER_USER = 0;
+	static final int CHECK_PROFILE = 1;
+	
+	FragmentManager mFragmentManager;
+	
+	private StartAppFragment mStartAppFragment;
+	public YesNoFragment mYesNoFragment;
+	private FavoriteUsersFilter mFavoriteUsersFilter;
+	
+	public DownloadFragment mDownloadFragment;
+	public LowerControlBar mLowerControlBar;
+	
+	public FrameLayout mLowerBarFrame;
+	
+	private LayoutInflater inflater;
+	private DrawerListAdapter mDrawerAdapter;
+	 
+	public SavedData mSavedData;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+	private ArrayList<Item> mItems;
+	public ArrayList<Item> mLowerBarItems;
+	
+	private String mUserLogin = "";
+	private String mUserPass = "";
+	
+	//Changing views
+	private RelativeLayout mContentView;
+    private ImageView mLoadingView;
+    private int mShortAnimationDuration;
+    
+    //menu 
+    private MenuItem mRefreshMenuItem; 
+	
+	public ArrayList<CategoryData> mCategoryData;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		getSupportActionBar().hide();
+		
+		setContentView(R.layout.activity_main_control_bar);
+		
+		mSavedData = new SavedData(MainControlBarActivity.this);
+		
+		mCategoryData = new ArrayList<CategoryData>();
+		
+		mTitle = mDrawerTitle = getTitle();
+		
+		Drawable img = getResources().getDrawable(R.drawable.ic_drawer);
+		mItems = new ArrayList<Item>();
+		mLowerBarItems = new ArrayList<Item>();
+		
+		mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+		mDrawerList = (ListView)findViewById(R.id.left_drawer);	
+		
+		//LayoutInflater inflater = getLayoutInflater();
+	    //ViewGroup mTop = (ViewGroup)inflater.inflate(R.layout.drawer_list_header, mDrawerList, false);
+	    //mDrawerList.addHeaderView(mTop, null, false);
+		
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+		
+		mDrawerAdapter = new DrawerListAdapter(getApplicationContext(), mItems);
+		mDrawerList.setAdapter(mDrawerAdapter);
+		checkProfile();
+		
+		//mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		
+		mDrawerToggle = new ActionBarDrawerToggle(this,
+				mDrawerLayout, 
+				R.drawable.ic_drawer,
+				R.string.drawer_open, 
+				R.string.drawer_close)
+		{
+			public void onDrawerClosed(View view) {
+				getSupportActionBar().setTitle(mTitle);
+				supportInvalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+            	getSupportActionBar().setTitle(mDrawerTitle);
+            	supportInvalidateOptionsMenu();
+            }
+			
+		};
+		
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		if(savedInstanceState == null)
+		{
+			//selectItem(findMenuIndexByType(DrawerListAdapter.AD_ALL));
+		}
+		
+		mLowerBarFrame = (FrameLayout)findViewById(R.id.lower_control);
+		mLowerBarFrame.setVisibility(View.GONE);
+		if(mSavedData.getLowerBarPos())
+		{
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			mLowerControlBar = new LowerControlBar();
+			fragmentManager.beginTransaction().replace(R.id.lower_control, mLowerControlBar).commit();
+			mLowerBarFrame.setVisibility(View.VISIBLE);
+		}
+		
+		mFragmentManager = getSupportFragmentManager();
+		mStartAppFragment = new StartAppFragment();
+		mFragmentManager.beginTransaction().replace(R.id.start_app_frame, mStartAppFragment).commit();
+		
+		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+		
+		DownloadData dd = new DownloadData(DownloadData.MAIN_DATA_CATEGORY, MainControlBarActivity.this);
+		dd.execute(getString(R.string.server_address) + "get_main_data.php");
+	}
+	
+	public void setCategoryData(ArrayList<CategoryData> data)
+	{
+		mCategoryData = data;
+		mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+		mStartAppFragment.startClose();
+		getSupportActionBar().show();
+		
+		if(mSavedData.isFirstAppRun())
+			new Handler().postDelayed(openDrawerRunnable(), 200);
+	}
+	
+	private Runnable openDrawerRunnable() {
+	    return new Runnable() {
+
+	        @Override
+	        public void run() {
+	            mDrawerLayout.openDrawer(Gravity.LEFT);
+	        }
+	    };
+	}
+	
+	
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+		
+		mLoadingView.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+    protected void onNewIntent(Intent intent) {
+        //setIntent(intent);
+        handleIntent(intent);
+    }
+	
+	private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String search_text = intent.getStringExtra(SearchManager.QUERY);
+            
+            createDownloadFragment(getString(R.string.server_address) + "get_main_search_result.php"
+					+ "?search_text=" + search_text,
+					getString(R.string.search), 
+					DownloadFragment.MAIN_SEARCH, 
+					MainControlBarActivity.this);
+ 
+        }
+ 
+    }
+	
+	public void createDownloadFragment(String url, String text, int type, Context context)
+	{
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		boolean null_check = false;
+		if(mDownloadFragment == null)
+		{
+			mDownloadFragment = new DownloadFragment();
+			null_check = true;
+		}
+		mDownloadFragment.startDownload(url,
+				text, 
+				type, 
+				context);
+		if(null_check)
+			fragmentManager.beginTransaction().replace(R.id.info_frame, mDownloadFragment).commit();
+	}
+	
+	public void createLowerBarSettingsFragment()
+	{
+		mDrawerLayout.closeDrawer(mDrawerList);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		LowerControlBarSettings fragment = new LowerControlBarSettings();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+	}
+	
+	public List<Item> getItemList()
+	{
+		return mItems;
+	}
+	
+	public Item getMenuItem(int index)
+	{
+		return mItems.get(index);
+	}
+	
+	public Drawable getIconByMenuType(int type)
+	{
+		Drawable icon = null;
+		switch (type) {
+		case 1:
+			icon = getResources().getDrawable(R.drawable.icon_ad_add);
+			break;
+		case 2:
+			icon = getResources().getDrawable(R.drawable.icon_ad_my);
+			break;
+		case 3:
+			icon = getResources().getDrawable(R.drawable.icon_ad_my);
+			break;
+		case 4:
+			icon = getResources().getDrawable(R.drawable.icon_ad_category);
+			break;
+		case 5:
+			icon = getResources().getDrawable(R.drawable.icon_ad_favorite_users);
+		case 6:
+			icon = getResources().getDrawable(R.drawable.icon_ad_favorite_ads);
+			break;
+		case 7:
+			icon = getResources().getDrawable(R.drawable.icon_ad_filtr);
+			break;
+		case 8:
+			icon = getResources().getDrawable(R.drawable.icon_ad_search);
+			break;
+		case 9:
+			icon = getResources().getDrawable(R.drawable.icon_exit);
+			break;
+		default:
+			break;
+		}
+		return icon;
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+	        // do something on back.
+	    	if(mYesNoFragment == null)
+	    	{
+		    	mYesNoFragment = new YesNoFragment();
+				FragmentManager fragmentManager = getSupportFragmentManager();
+				fragmentManager.beginTransaction().replace(android.R.id.content, mYesNoFragment).commit();
+		    }
+	    	else
+	    	{
+	    		mYesNoFragment.closeAnim();
+	    		mYesNoFragment = null;
+	    	}
+	        return true;
+	    }
+
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	public void connectFailed()
+	{
+		ErrorFragment fragment = new ErrorFragment(getString(R.string.no_connection));
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+	}
+	
+	public void checkProfile()
+	{
+		mUserLogin = mSavedData.getUserLogin();
+		mUserPass = mSavedData.getUserPass();
+		Drawable img = getResources().getDrawable(R.drawable.ic_drawer);
+		mItems.clear();
+		if(mUserLogin.toString() != "")
+		{
+			mItems.add(new DrawerListProfile(inflater, mUserLogin));
+			mItems.add(new DrawerListHeaders(inflater, getString(R.string.title_private)));
+	        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_add), getString(R.string.add_ad), DrawerListAdapter.AD_ADD));
+	        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_my), getString(R.string.my_ad), DrawerListAdapter.AD_MY));
+	        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_favorite_users), getString(R.string.ad_favorite_users), DrawerListAdapter.AD_FAVORITE_USERS));
+	        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_favorite_ads), getString(R.string.ad_favorite_ads), DrawerListAdapter.AD_FAVORITE));
+	        
+	        ArrayList<Integer> array = mSavedData.getUserFavoriteAds();
+	        if(array.size() == 0)
+	        {
+		        createDownloadFragment(getString(R.string.server_address)
+		        		+"get_favorite_ads.php?user_id=" + mSavedData.getUserId(), 
+		        		getString(R.string.load_data), 
+		        		DownloadFragment.GET_FAVORITE_ADS, 
+		        		MainControlBarActivity.this);
+	        }
+	        array = mSavedData.getUserFavoriteUsers();
+	        if(array.size() == 0)
+	        {
+	        	createDownloadFragment(getString(R.string.server_address)
+		        		+"get_favorite_users.php?user_id=" + mSavedData.getUserId(), 
+		        		getString(R.string.load_data), 
+		        		DownloadFragment.GET_FAVORITE_USERS, 
+		        		MainControlBarActivity.this);
+	        }
+		}
+		else
+		{
+			mItems.add(new DrawerListItems(getApplicationContext(), inflater, img, getString(R.string.user_enter), DrawerListAdapter.PROFILE));
+		}
+		mItems.add(new DrawerListHeaders(inflater, getString(R.string.title_common)));
+        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_my), getString(R.string.all_ad), DrawerListAdapter.AD_ALL));
+        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_category), getString(R.string.ad_category), DrawerListAdapter.AD_CATEGORY));
+        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_filtr), getString(R.string.ad_filtr), DrawerListAdapter.AD_FILTR));
+        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_ad_search), getString(R.string.ad_search), DrawerListAdapter.AD_SEARCH));
+        mItems.add(new DrawerListItems(getApplicationContext(), inflater, getResources().getDrawable(R.drawable.icon_exit), getString(R.string.btn_exit), DrawerListAdapter.EXIT));
+        mItems.add(new DrawerListLowerBar(MainControlBarActivity.this, inflater, getResources().getDrawable(R.drawable.icon_gear), getString(R.string.lower_bar), DrawerListAdapter.LOWER_BAR));
+        
+        if(mSavedData.getLowerBarArrayPos().size() != 0)
+        {
+        	mLowerBarItems.clear();
+        	ArrayList<Integer> array = mSavedData.getLowerBarArrayPos();
+        	for(int i=0; i<array.size(); i++)
+        	{
+        		mLowerBarItems.add(getItemByType(array.get(i)));
+        	}
+        }
+        else
+        {
+        	mLowerBarItems.clear();
+	        for (int i = 0; i < mItems.size(); i++) 
+			{
+				if(mItems.get(i).getViewType()
+						!= DrawerListAdapter.RowType.HEADER_ITEM.ordinal()&&
+								mItems.get(i).getViewType()
+						!= DrawerListAdapter.RowType.PROFILE_ITEM.ordinal() &&
+								mItems.get(i).getViewType()
+						!= DrawerListAdapter.RowType.LOWERBAR.ordinal())
+				{
+					mLowerBarItems.add(mItems.get(i));
+				}
+			}
+	        
+	        ArrayList<Integer> array_type = new ArrayList<Integer>();
+	        
+	        for(int i=0; i<mLowerBarItems.size(); i++)
+	        {
+	        	array_type.add(mLowerBarItems.get(i).getMenuType());
+	        }
+	        mSavedData.saveLowerBarArrayPos(array_type);
+        }
+		mDrawerAdapter.notifyDataSetChanged();
+	}
+	
+	private Item getItemByType(int MenuType)
+	{
+		Item item = null;
+		for(int i=0; i<mItems.size(); i++)
+		{
+			int tMenuType = mItems.get(i).getMenuType();
+			if(tMenuType == MenuType)
+			{
+				item = mItems.get(i);
+				break;
+			}
+		}
+		return item;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main_control_bar, menu);
+		
+		SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+		MenuItem item = menu.findItem(R.id.main_search);
+		SearchView searchView = (SearchView)MenuItemCompat.getActionView(item);
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		//menu.findItem(R.id.main_search).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if(mYesNoFragment != null)
+		{
+			mYesNoFragment.closeAnim();
+		}
+		if(mDrawerToggle.onOptionsItemSelected(item))
+		{
+			return true;
+		}
+		
+		switch(item.getItemId())
+		{
+		case R.id.main_search:
+			
+			/*Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+			intent.putExtra(SearchManager.QUERY, getSupportActionBar().getTitle());
+			
+			if(intent.resolveActivity(getPackageManager()) != null)
+			{
+				startActivity(intent);
+			}
+			else
+			{
+				Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
+			}*/
+			return true;
+		case R.id.action_refresh:
+			mRefreshMenuItem = item;
+			mRefreshMenuItem = MenuItemCompat.setActionView(item, R.layout.action_progressbar);
+			MenuItemCompat.expandActionView(item);
+			selectItem(DrawerListAdapter.AD_ALL);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private class DrawerItemClickListener implements ListView.OnItemClickListener
+	{
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			// TODO Auto-generated method stub
+			;
+			selectItem(mItems.get(position).getMenuType());
+		}
+		
+	}
+	
+	public void selectItem(int type) 
+	{
+		
+		if(mFavoriteUsersFilter != null)
+		{
+			getSupportFragmentManager().beginTransaction().remove(mFavoriteUsersFilter).commit();
+			mFavoriteUsersFilter = null;
+		}
+		// TODO Auto-generated method stub
+		//Fragment fragment = new PlanetFragment();
+		//Bundle args = new Bundle();
+		//args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+		//fragment.setArguments(args);
+		if(mDownloadFragment != null)
+		{
+			getSupportFragmentManager().beginTransaction().remove(mDownloadFragment).commit();
+			mDownloadFragment = null;
+		}
+		int index = -1;
+		for(int i=0; i<mItems.size(); i++)
+		{
+			int tMenuType = mItems.get(i).getMenuType();
+			if(tMenuType == type)
+			{
+				index = i;
+				break;
+			}
+		}
+		
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		
+		int view_type = mItems.get(index).getMenuType();
+		switch (view_type) {
+		case DrawerListAdapter.PROFILE:
+			if(mSavedData.getUserLogin().toString() == "")
+			{
+				Intent intent = new Intent(MainControlBarActivity.this, LoginActivity.class);
+				startActivityForResult(intent, REGISER_USER);
+			}
+			else
+			{
+				ProfileFragment fragment = new ProfileFragment();
+				fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+			}
+			break;
+		case DrawerListAdapter.AD_ADD:
+			AdAddFragment ad_add_fragment = new AdAddFragment();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, ad_add_fragment).commit();
+			break;
+		case DrawerListAdapter.AD_MY:
+			createDownloadFragment(getString(R.string.server_address) + "get_my_ad_list.php"
+					+ "?user_id=" + mSavedData.getUserId(),
+					getString(R.string.load_data), 
+					DownloadFragment.LOAD_AD_LIST, 
+					MainControlBarActivity.this);
+			break;
+		case DrawerListAdapter.AD_ALL:
+			createDownloadFragment(getString(R.string.server_address) + "get_ad_list.php",
+					getString(R.string.load_data), 
+					DownloadFragment.LOAD_AD_LIST, 
+					MainControlBarActivity.this);
+			break;
+		case DrawerListAdapter.AD_CATEGORY:
+			CategoryFragment fragment = new CategoryFragment();
+			fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+			break;
+		case DrawerListAdapter.AD_FAVORITE_USERS:
+			if(mSavedData.getUserFavoriteUsers().size() != 0)
+			{
+				mFavoriteUsersFilter = new FavoriteUsersFilter();
+				fragmentManager.beginTransaction().replace(R.id.filter_frame, mFavoriteUsersFilter).commit();
+			}
+			break;
+		case DrawerListAdapter.AD_FAVORITE:
+			ArrayList<Integer> array = mSavedData.getUserFavoriteAds();
+			String str = "";
+			for(int i=0; i<array.size(); i++)
+			{
+				str += "&ad_ids[]=" + array.get(i);
+			}
+			createDownloadFragment(getString(R.string.server_address) + "get_favorite_ad_list.php"
+					+ "?user_id=" + mSavedData.getUserId()
+					+ str,
+					getString(R.string.load_data), 
+					DownloadFragment.LOAD_AD_LIST, 
+					MainControlBarActivity.this);
+			break;
+		case DrawerListAdapter.LOWER_BAR:
+			if(mSavedData.getLowerBarPos())
+			{
+				if(mLowerControlBar != null)
+				{
+					mLowerControlBar.closeAnim();
+					mSavedData.saveLowerBarPos(false);
+				}
+			}
+			else
+			{
+				mLowerBarFrame.setVisibility(View.VISIBLE);
+				mLowerControlBar = new LowerControlBar();
+				fragmentManager.beginTransaction().replace(R.id.lower_control, mLowerControlBar).commit();
+				mSavedData.saveLowerBarPos(true);
+				
+			}
+			break;
+		case DrawerListAdapter.EXIT:
+			finish();
+			break;
+		default:
+			break;
+		}		
+		
+		mDrawerList.setItemChecked(index, true);
+		setTitle(mItems.get(index).getMenuTitle());
+		mDrawerLayout.closeDrawer(mDrawerList);
+		
+	}
+	
+	@Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+	
+	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    // Check which request we're responding to
+		if( data == null)
+		{
+		if (requestCode == REGISER_USER) {
+	        // Make sure the request was successful
+	        if (resultCode == RESULT_OK) {
+	        	Intent intent = new Intent(MainControlBarActivity.this, RegisterActivity.class);
+				startActivityForResult(intent, CHECK_PROFILE);
+	        }
+	        else if(resultCode == CHECK_PROFILE)
+	        {
+	        	new Thread(new Runnable() {
+	                @Override
+	                public void run() {
+	                  // Then bump it back onto the UI thread
+	                  runOnUiThread(new Runnable() {
+	                    @Override
+	                    public void run() {
+	                    	checkProfile();
+	                    }
+	                  });
+	                }
+	              }).start();
+	        	
+	        }
+	    }
+		else if (requestCode == CHECK_PROFILE) {
+	        // Make sure the request was successful
+	        if (resultCode == RESULT_OK) {
+	            checkProfile();
+	        }
+	    }
+		}
+	}
+	
+	
+	public void setMainPageData(ArrayList<AdListData> data)
+	{
+		MainPage fragment = new MainPage();
+		fragment.setData(data);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+	}
+	
+	@Override
+	public void onAttachedToWindow() {
+	    super.onAttachedToWindow();
+	    Window window = getWindow();
+	    window.setFormat(PixelFormat.RGBA_8888);
+	}
+
+	public void setNull()
+	{
+		mDownloadFragment = null;
+	}
+	
+}

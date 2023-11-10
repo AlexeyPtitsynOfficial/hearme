@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <com.donearh.imageslider.SliderRelativeLayout
+        android:id="@+id/root"
+        android:layout_width="240dp"
+        android:layout_height="150dp"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <RelativeLayout 
+            android:id="@+id/slider_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+	        <ImageView
+	            android:id="@+id/slider_image"
+	            android:layout_width="240dp"
+	            android:layout_height="150dp"
+	            android:scaleType="fitXY"
+	            />
+	        <ImageButton
+		            android:id="@+id/btn_full"
+			        android:layout_width="25dp"
+				    android:layout_height="25dp"
+				    android:layout_alignParentBottom="true"
+				    android:layout_alignParentRight="true"
+				    android:background="@drawable/selector_circle_full_ad"
+				    android:src="@drawable/icon_full_ad"
+				    android:adjustViewBounds="true"
+				   	android:scaleType="fitCenter"
+				   	android:padding="4dp"
+				   	android:layout_margin="10dp"
+		            />
+        </RelativeLayout>
+        <RelativeLayout 
+            android:id="@+id/corner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+	        <View
+	            android:layout_width="150dp"
+        		android:layout_height="150dp"
+        		android:layout_centerInParent="true"
+        		android:background="@drawable/circle_night_green"
+        		>
+	        </View>
+	        <ImageView 
+	            android:layout_width="70dp"
+        		android:layout_height="70dp"
+        		android:layout_centerInParent="true"
+        		android:src="@drawable/ic_launcher"
+	            />
+        </RelativeLayout>
+
+    </com.donearh.imageslider.SliderRelativeLayout>
+</LinearLayout>

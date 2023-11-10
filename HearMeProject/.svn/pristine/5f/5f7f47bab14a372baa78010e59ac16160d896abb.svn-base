@@ -1,0 +1,88 @@
+package com.donearh.hearme;
+
+import java.util.ArrayList;
+
+import android.opengl.Visibility;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+
+public class FavoriteUsersFilter extends Fragment implements AdapterView.OnItemSelectedListener
+{
+
+	private ProgressBar mProgressBar;
+	private Spinner mSpinner;
+	private Integer mSpinnerId = 0;
+	private ArrayList<String> mUsersList = new ArrayList<String>();
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+		View rootView = inflater.inflate(R.layout.fragment_favorite_users_filter, container, false);
+		
+		mProgressBar = (ProgressBar)rootView.findViewById(R.id.progressbar);
+		mSpinner = (Spinner)rootView.findViewById(R.id.filter);
+		mSpinner.setVisibility(View.GONE);
+		mUsersList.add("Все");
+		
+		
+		
+		ArrayList<Integer> array = ((MainControlBarActivity)getActivity()).mSavedData.getUserFavoriteUsers();
+		String str = "";
+		for(int i=0; i<array.size(); i++)
+		{
+			if(str == "")
+			{
+				str += "?users_ids[]=" + array.get(i);
+				continue;
+			}
+			str += "&users_ids[]=" + array.get(i);
+		}
+		
+		DownloadData dd = new DownloadData(DownloadData.GET_FAV_USERS_NAMES, getActivity());
+		dd.execute(getString(R.string.server_address) + "get_fav_users_names.php" + str);
+		
+		return rootView;
+	}
+	
+	public void endDowload(ArrayList<String> array)
+	{
+		for(int i=0; i<array.size(); i++)
+		{
+			mUsersList.add(array.get(i));
+		}
+		
+		mProgressBar.setVisibility(View.GONE);
+		mSpinner.setVisibility(View.VISIBLE);
+		ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(getActivity(), 
+				android.R.layout.simple_spinner_item, 
+				mUsersList);
+		mSpinner.setAdapter(categoriesAdapter);
+		mSpinner.setSelection(0);
+		mSpinner.setOnItemSelectedListener(this);
+		mSpinner.setId(mSpinnerId);
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int position,
+			long id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/card_common"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+    
+    |<com.donearh.hearme.RecyclingImageView
+    	android:id="@+id/category_image"
+    	android:layout_width="70dp"
+    	android:layout_height="70dp"
+    />
+    <View 
+	    android:layout_width="match_parent"
+	    android:layout_height="1dp"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginRight="10dp"
+	    android:background="@drawable/gradient_light"
+	    />
+    <CheckBox 
+        android:id="@+id/category_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="#094259"
+        android:lines="2"
+        android:maxLines="2"
+        android:checked="true"
+        />
+    
+
+</LinearLayout>

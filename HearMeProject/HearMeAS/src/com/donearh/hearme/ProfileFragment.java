@@ -1,0 +1,44 @@
+package com.donearh.hearme;
+
+import com.donearh.hearme.library.DatabaseHandler;
+import com.donearh.hearme.library.UserFunctions;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
+import android.widget.Button;
+
+public class ProfileFragment extends Fragment{
+
+	private SavedData mSavedData;
+	public ProfileFragment()
+	{
+		
+	}
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState)
+	{
+		View rootView = inflater.inflate(R.layout.profile_fragment, container, false);
+		
+		Button tExitBtn = (Button)rootView.findViewById(R.id.profile_exit_btn);
+		tExitBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				UserFunctions userFunctions = new UserFunctions();
+				userFunctions.logoutUser(getActivity());
+				
+				((MainControlBarActivity)getActivity()).checkProfile();
+				((MainControlBarActivity)getActivity()).selectItem(DrawerListAdapter.AD_ALL, -1);
+				getActivity().getSupportFragmentManager().beginTransaction().remove(ProfileFragment.this).commit();
+			}
+		});
+		
+		return rootView;
+		
+	}
+}

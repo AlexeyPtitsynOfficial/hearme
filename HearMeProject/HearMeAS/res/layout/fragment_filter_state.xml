@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="?attr/actionBarSize"
+    android:background="#1eeece"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/filter_text"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:text="@string/filter_active"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:gravity="center"
+        />
+
+</LinearLayout>

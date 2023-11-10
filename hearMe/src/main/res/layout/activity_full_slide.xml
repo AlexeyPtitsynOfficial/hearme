@@ -1,0 +1,42 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.donearh.hearme.FullSlideActivity" >
+
+    <WebView 
+        android:id="@+id/web_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" >
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="gone"
+            tools:ignore="UselessParent" >
+
+            <Button
+                android:id="@+id/jump_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/dummy_button" 
+                android:textColor="@android:color/white"
+                android:background="@drawable/selector_button"/>
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

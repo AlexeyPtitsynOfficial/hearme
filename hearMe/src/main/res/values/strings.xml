@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HearMe</string>
+    <string name="action_settings">Settings</string>
+    <string name="setting_app">Настройка приложения</string>
+    <string name="app_version">Версия программы</string>
+    <string name="Yakutia">Якутия</string>
+    <string name="each_hear_you">Пусть каждый вас услышит!</string>
+    <string name="btn_ok">Ок</string>
+    <string name="btn_yes">Да</string>
+    <string name="btn_no">Нет</string>
+    <string name="btn_exit">Выйти</string>
+    <string name="btn_again">Повтор</string>
+    <string name="btn_add">ДОБАВИТЬ</string>
+    <string name="btn_cancel">Отмена</string>
+    <string name="send">Отправить</string>
+    <string name="load_data">Загрузка</string>
+    <string name="update">Обновить</string>
+    <string name="no_connection">Подключение отсутствует</string>
+    <string name="error">Ошибка</string>
+    <string name="error_load_data">Ошибка при загрузке данных</string>
+    <string name="error_send_data">Ошибка при отправке данных</string>
+    <string name="button">Кнопка</string>
+    <string name="comment_add_hint">Комментировать</string>
+    <string name="filter_active">ФИЛЬТР: </string>
+    <string name="filter_category">Категории</string>
+    <string name="filter_search">Поиск</string>
+    <string name="guest">Гость</string>
+    <string name="empty_list_view">В данной категории еще нет объявлений. Добавь, будь первым!</string>
+    <string name="crash_toast_text">В приложении произошла ошибка. Отчет об ошибке будет отправлен разработчикам.</string>
+    <string name="necessarily">Обязательно</string>
+    <string name="all">Все</string>
+    <string name="all_areas">Все города и районы</string>
+    <string name="select">Выбрать</string>
+    <string name="must_select">Выбрать(Обязательно)</string>
+    <string name="choose_source">Выберите источник</string>
+    <string name="take_photo">Сфотографировать</string>
+    <string name="from_gallery">Из галлереи</string>
+    <string name="choose_file">Выберите файл</string>
+    <string name="welcome">Здравствуйте</string>
+    <string name="info">Информация</string>
+    <string name="search_text">Текст поиска</string>
+    <string name="apply">Применить</string>
+    <string name="in_authors">В именах авторах</string>
+    <string name="in_titles">В заголовках</string>
+    <string name="in_desc">В тексте объявления</string>
+    <string name="soon">Скоро</string>
+    <string name="welcome_text">Дорогой пользователь! Спасибо, что Вы установили приложение HearMe. Надеемся HearMe станет незаменимым помощником в ваших поисках!</string>
+    <string name="user">Пользователь</string>
+    <string name="organization">Организация</string>
+    <string name="ad">Объявление</string>
+
+
+    <!-- notif -->
+    <string name="notif_logout">Выход из профиля...</string>
+    <string name="notif_ad_add">Добавление объявления</string>
+    <string name="update_app">Необходимо обновить программу</string>
+    <string name="user_ad_list_empty">У вас нет добавленных объявлений</string>
+    <string name="fav_users_list_empty">Список избранных пользователей пуст</string>
+    <string name="fav_ads_list_empty">Список избранных объявлений пуст</string>
+    <string name="fav_users_empty_in_area">В выбранном районе/городе нету избранных пользователей, чтобы увидеть список выберите \"Все города и районы\"</string>
+    <string name="fav_ads_empty_in_area">В выбранном районе/городе нету избранных объявлений, чтобы увидеть список выберите \"Все города и районы\"</string>
+
+    <!-- notif error -->
+    <string name="error_select_acc_type">Выберите тип аккаунта</string>
+    <string name="error_no_check_policy">Соглашение не принято</string>
+    <string name="error_unknown">Истекло время авторизации</string>
+    <string name="error_expired_token">Истекло время авторизации</string>
+    <string name="error_not_check_policy">Вы не приняли условие использования и политику конфиденциальности</string>
+    <!-- toast -->
+    <string name="toast_need_auth">Необходима авторизация</string>
+    <string name="no_fav_ads">У вас нет избранных объявлений</string>
+    <string name="no_fav_users">У вас нет избранных пользователей</string>
+    <string name="no_auth_user">Неавторизованный пользователь</string>
+    <string name="no_sub_cat">Подкатегория отсутствует</string>
+    <string name="success_comment">Комментарий успешно добавлен</string>
+
+    <!-- Action Bar -->
+    <string name="hint_text">Введите текст</string>
+
+    <string name="are_u_sure_to_exit">Вы уверены, что хотите выйти?</string>
+
+    <!-- Menu -->
+    <string name="title_private">Личные</string>
+    <string name="authorization">Авторизация</string>
+    <string name="add_ad">Добавить объявление</string>
+    <string name="my_ad">Мои объявления</string>
+    <string name="title_common">Основные</string>
+    <string name="all_ad">Все объявления</string>
+    <string name="all_cats">Все категории</string>
+    <string name="cats">Категории</string>
+    <string name="ad_cat_filter">Фильтр категории</string>
+    <string name="favorite_users">Избранные пользователи</string>
+    <string name="favorite_ads">Избранные объявления</string>
+    <string name="ext_search">Расширенный поиск</string>
+    <string name="lower_bar">Нижняя панель</string>
+    <string name="tell_friends">Рассказать о HearMe друзьям</string>
+    <string name="add_report">Оставить отзыв</string>
+    <string name="about_pr">О программе</string>
+    <string name="add_commercial">Добавить рекламу</string>
+    <string name="main_cats">Основные категории</string>
+
+    <!-- Registration -->
+    <string name="enter">Вход</string>
+    <string name="login_error">Неправильное имя пользователя или пароль</string>
+    <string name="account_type">Тип аккаунта</string>
+    <string name="enter_your_name">Как вас зовут?</string>
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="pass_text">Пароль</string>
+    <string name="pass_confirm_text">Подтверждение пароля</string>
+    <string name="login_text">Логин</string>
+    <string name="email_text">Электронная почта</string>
+    <string name="display_name">Отображаемое имя</string>
+    <string name="display_name_text">Имя, которое будет видно пользователям</string>
+    <string name="select_avatar">Выберите изображение для профиля</string>
+    <string name="org_desc">Описание организации</string>
+    <string name="org_name">Наименование организации</string>
+    <string name="join">Войти</string>
+    <string name="register">Регистрация</string>
+    <string name="hint_reg_edit">Обязательно</string>
+    <string name="role_login_character">Не менее 3-х символов, только латиница и цифры</string>
+    <string name="role_pass_character">Не менее 6-ти символов</string>
+    <string name="error_space">Пробелы недопустимы</string>
+    <string name="error_not_enough_character">Недостаточно символов</string>
+    <string name="error_not_equal_pass">Пароли не совпадают</string>
+    <string name="error_not_have_dog">"Неправильная электронная почта"</string>
+    <string name="hint_email_example">primer@email.rus</string>
+    <string name="confirm_policy">Я принимаю Условия использования и соглашаюсь с политикой конфиденциальности</string>
+
+    <!-- Profile -->
+    <string name="show_full_name">Отображать полное имя вместо логина</string>
+    <string name="show_org_full_name">Отображать полное наименование организации вместо логина</string>
+    <string name="log_out">Выйти из профиля</string>
+    <string name="remove_account">Удалить аккаунт</string>
+
+    <!-- Ad Add -->
+    <string name="ad_guest_name">Ваше имя</string>
+    <string name="ad_title">Заголовок</string>
+    <string name="select_area">Выбрать город/район</string>
+    <string name="select_category">Выбрать категорию</string>
+    <string name="ad_desc">Основной текст</string>
+    <string name="ad_phone_num">Добавить номер телефона</string>
+    <string name="ad_add_email">Добавить электронный адрес</string>
+    <string name="ad_image">Добавить изображение</string>
+    <string name="ad_chooce_image">Выбрать изображение</string>
+    <string name="ad_error_title">Добавьте заголовок</string>
+    <string name="ad_error_category">Выберите категорию</string>
+    <string name="ad_error_desc">Добавьте основной текст объявления</string>
+    <string name="error_process_data">Ошибка при обработке данных</string>
+    <string name="error_phone_num">Неправильный номер телефона</string>
+    <string name="error_user_exist">Пользователь с таким логином уже существует</string>
+    <string name="error_login">Неправильный логин или пароль</string>
+    <string name="error_enter_login">Введите логин</string>
+    <string name="error_enter_pass">Введите пароль</string>
+    <string name="error_empty_search">К сожалению, объявления по данному запросу не найдены</string>
+    <string name="error_not_guest_to_fav">Нельзя добавить неавторизованного пользователя в избранные</string>
+    <string name="error_not_yourself_to_fav">Нельзя добавить себя в избранные. Используйте ""Мои объявления""</string>
+    <string name="error_crop_not_support">Не найдено приложение для кадрирования изображения</string>
+    <string name="error_take_picture">Произошла ошибка при получении изображения</string>
+    <string name="error_not_found_email_app">Нет приложения для отправки сообщения</string>
+    <string name="error_cannot_call">Невозможно сделать звонок</string>
+    <string name="error_area_not_selected">Выберите город или район</string>
+    <string name="error_subcat_not_selected">Выберите подкатегорию</string>
+    <string name="error_text_too_short">Текст слишком короткий</string>
+    <string name="error_register">Произошла ошибка при регистрации</string>
+
+    <!-- Ad Details -->
+    <string name="ad_email">Эл. почта</string>
+    <string name="call">Позвонить</string>
+    <string name="drawer_open">Открыть</string>
+    <string name="drawer_close">Закрыть</string>
+    <string name="search">Поиск</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="title_activity_start_load">StartLoadActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="icon_desc">Иконка</string>
+    <string name="title_activity_login">Вход</string>
+    <string name="title_activity_register">Регистрация</string>
+    <string name="title_activity_profile_fragment">Профиль</string>
+    <string name="title_activity_app_start">AppStartActivity</string>
+    <string name="title_activity_ad_details">Подробная информация</string>
+    <string name="title_activity_lower_bar_settings">Настройка нижней панели</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="exit_confirm">Вы хотите выйти?</string>
+    <string name="exit">Выйти</string>
+    <string name="title_activity_ad_images">Изображение</string>
+    <string name="title_activity_profile">Профиль</string>
+    <string name="title_activity_ad_add">Добавление объявления</string>
+    <string name="share">Поделиться</string>
+    <string name="save">Сохранить</string>
+    <string name="title_activity_category">Категории</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_full_slide">FullSlideActivity</string>
+    <string name="tag_id">tag_id</string>
+    <string name="tag_img_res">tag_img_res</string>
+    <string name="tag_has_child">tag_has_child</string>
+    <string name="email_subject">Тема письма</string>
+    <string name="email_main_text">Основной текст</string>
+    <string name="choose_email_app">Выберите приложение для отправки письма...</string>
+    <string name="choose_dest">Выберите назначение</string>
+
+    <!-- Policy -->
+    <string name="i_accept">Я принимаю</string>
+    <string name="use_case">Условия использования</string>
+    <string name="accept_policy">и соглашаюсь с политикой конфиденциальности</string>
+
+
+    <string name="tell_friends_text">HearMe Бесплатные объявления в Якутии</string>
+
+    <!-- About -->
+    <string name="about">Anodly (c) 2015 Все права защищены</string>
+
+    <!-- Help -->
+    <string name="help_lower_bar_settings">Перетащите в первый ряд те иконки, которые будут отображаться в нижней панели</string>
+    <string name="title_activity_commercial">CommercialActivity</string>
+    <string name="title_activity_user_report">Отзыв</string>
+    <string name="filter_name">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789</string>
+    <string name="report_content">Текст отзыва</string>
+    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="title_activity_user_details">UserDetailsActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

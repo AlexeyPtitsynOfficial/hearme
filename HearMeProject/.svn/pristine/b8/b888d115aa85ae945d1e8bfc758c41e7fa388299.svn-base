@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
+    tools:context="com.donearh.hearme.AdDetailsActivity" />
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:gravity="center_vertical"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/spinner_gradient"
+    >
+    <EditText
+        android:id="@+id/comment_edit"
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_marginLeft="5dp"
+    	android:layout_marginRight="55dp"
+    	android:hint="Текст комментария"
+    	android:textColor="@android:color/white"
+        />
+    <Button
+        android:id="@+id/comment_btn"
+        android:layout_width="50dp"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentRight="true"
+    	android:layout_marginRight="5dp"
+        />
+</RelativeLayout>
+
+</RelativeLayout>
+

@@ -1,0 +1,254 @@
+package com.donearh.hearme;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ParseException;
+import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+
+public class DownloadData extends AsyncTask<String, Void, Object>
+{
+	static final int MAIN_DATA_CATEGORY = 0;
+	static final int CHECK_USER = 1;
+	static final int LOAD_AD_LIST = 2;
+	static final int GET_FAV_USERS_NAMES = 3;
+	static final int GET_MORE_AD = 4;
+	static final int GET_MORE_AD_DETAILS = 5;
+	
+	private Context mContext;
+	private int mLoadType;
+	private JSONArray jArray;
+	private String result = null;
+	private InputStream is = null;
+	private StringBuilder sb = null;
+	
+	private MainPage mMainPage;
+	private LoginActivity mLoginActivity;
+	
+	private String mUserLogin;
+	private String mUserPass;
+	private ArrayList<AdListData> mAdListData;
+	
+	private ArrayList<CategoryData> mCategoryData;
+	
+	private ArrayList<String> mFavUsersList;
+	
+	private MainControlBarActivity mMainControlBarActivity;
+	
+	protected DownloadData(int type, Context context)
+	{
+		mContext = context;
+		mLoadType = type;
+		mAdListData = new ArrayList<AdListData>();
+		mCategoryData = new ArrayList<CategoryData>();
+		mFavUsersList = new ArrayList<String>();
+		
+		switch(mLoadType){
+		case MAIN_DATA_CATEGORY:
+			mMainControlBarActivity = ((MainControlBarActivity)context);
+			break;
+		}
+	}
+	
+	@Override
+	protected void onPreExecute() {
+		// TODO Auto-generated method stub
+		super.onPreExecute();
+	}
+
+	public void setMainPage(MainPage page)
+	{
+		mMainPage = page;
+		
+	}
+	
+	public void setLoginActivity(LoginActivity activity)
+	{
+		mLoginActivity = activity;
+	}
+
+	
+	@Override
+	protected Object doInBackground(String... params)
+	{
+		ArrayList nameValuePairs = new ArrayList();
+		//http post
+		try
+		{
+		     HttpClient httpclient = new DefaultHttpClient();
+		     String url = params[0];
+		     HttpPost httppost = new HttpPost(url);
+		     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		     HttpResponse response = httpclient.execute(httppost);
+		     HttpEntity entity = response.getEntity();
+		     is = entity.getContent();
+		}
+		catch(Exception e)
+		{
+		   Log.e("doni_error", "Error in http connection"+e.toString());
+		   return "no_internet";
+		}
+		
+		nameValuePairs = null;
+		
+		//convert response to string
+		try
+		{
+		  BufferedReader reader = new BufferedReader(new InputStreamReader(is,HTTP.UTF_8));
+		  sb = new StringBuilder();
+		  sb.append(reader.readLine() + "\n");
+
+		  String line="0";
+		  while ((line = reader.readLine()) != null) 
+		  {
+		      sb.append(line + "\n");
+		  }
+		  is.close();
+		  result=sb.toString();
+		}
+		catch(Exception e)
+		{
+			
+		   Log.e("doni_error", "Error converting result "+e.toString());
+		   return "sql_error";
+		}
+		
+		//paring data
+		
+		try
+		{
+		      jArray = new JSONArray(result);
+		      JSONObject json_data=null;
+		      for(int i=0;i<jArray.length();i++)
+		      {
+		    	  json_data = jArray.getJSONObject(i);
+		    	  if(mLoadType == MAIN_DATA_CATEGORY)
+		    	  {
+		    		  CategoryData data = new CategoryData();
+		    		  data.Id = json_data.getInt("category_id");
+		    		  data.Name = json_data.getString("category_name");
+		    		  data.ParentId = json_data.getInt("parent_id");
+		    		  mCategoryData.add(data);
+		    	  }
+		    	  if(mLoadType == CHECK_USER)
+		    	  {
+		    		  mUserLogin = json_data.getString("user_login");
+		    		  mUserPass = json_data.getString("user_pass");
+		    	  }
+		    	  else if(mLoadType == LOAD_AD_LIST 
+		    			  || mLoadType == GET_MORE_AD
+		    			  || mLoadType == GET_MORE_AD_DETAILS)
+		    	  {
+		    		  AdListData data = new AdListData();
+		    		  data.Id = json_data.getInt("ad_uid");
+		    		  data.User_id = json_data.getInt("user_id");
+		    		  data.Title = json_data.getString("ad_title");
+		    		  data.Category_id = json_data.getInt("ad_category");
+		    		  data.Category_name = json_data.getString("category_name");
+		    		  data.Desc = json_data.getString("ad_desc");
+		    		  data.Add_time = json_data.getString("ad_add_time");
+		    		  data.Add_date = json_data.getString("ad_add_date");
+		    		  
+		    		  mAdListData.add(data);
+		    	  }
+		    	  else if(mLoadType == GET_FAV_USERS_NAMES)
+		    	  {
+		    		  mFavUsersList.add(json_data.getString("user_login"));
+		    	  }
+		      }
+		      
+		      
+		}
+		catch(JSONException e1)
+		{
+			Log.e("doni_error", "SQL ERROR RESULT = " + result);
+		    return "sql_error";
+		} 
+		catch (ParseException e1) 
+		{
+					e1.printStackTrace();
+		}
+		jArray = null;
+		result = null;
+		is = null;
+		sb=null;
+		return "success";
+	}
+	
+	protected void onPostExecute(Object result) {
+        // Pass the result data back to the main activity
+	 
+    	if(result == "no_internet")
+    	{
+    		//errorView(getString(R.string.no_connection));
+    	}
+    	if(result == "sql_error")
+    	{
+    		switch (mLoadType) {
+			case CHECK_USER:
+				WaitFragment fragment = new WaitFragment(mLoginActivity.getString(R.string.login_error));
+				FragmentManager fragmentManager = mLoginActivity.getSupportFragmentManager();
+				fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+				break;
+
+			default:
+				break;
+			}
+    		//errorView(getString(R.string.error_load_data));
+    	}
+    	else if(result == "success")
+    	{
+    		switch (mLoadType) {
+    		case MAIN_DATA_CATEGORY:
+    			mMainControlBarActivity.setCategoryData(mCategoryData);
+    			break;
+			case CHECK_USER:
+				//mLoginActivity.loginSuccess();
+				break;
+			case LOAD_AD_LIST:
+				if(mMainPage != null)
+				{
+					mMainPage.setRefreshedData(mAdListData);
+					mMainPage.stopRefreshing();
+				}
+				break;
+			case GET_MORE_AD:
+				if(mMainPage != null)
+				{
+					mMainPage.setMoreData(mAdListData);
+				}
+			break;
+			case GET_MORE_AD_DETAILS:
+				((AdDetailsActivity)mContext).setMoreData(mAdListData);
+			break;
+			case GET_FAV_USERS_NAMES:
+				Fragment fr = ((MainControlBarActivity)mContext).getSupportFragmentManager().findFragmentById(R.id.filter_frame);
+				((FavoriteUsersFilter)fr).endDowload(mFavUsersList);
+				break;
+			default:
+				break;
+			}
+    		
+    	}
+    }
+
+}

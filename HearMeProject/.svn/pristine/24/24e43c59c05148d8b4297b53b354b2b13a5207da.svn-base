@@ -1,0 +1,194 @@
+package com.donearh.hearme;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.Spinner;
+
+public class AdAddFragment extends Fragment implements AdapterView.OnItemSelectedListener
+{
+
+	private MainControlBarActivity mMainControlBarActivity;
+	
+	private LinearLayout mLayout;
+	private Long mUserId;
+	private Integer mSelectedCategoryID = -1;
+	private String mEncodeTitle;
+	private String mEncodeDesc;
+	private Integer mSpinnerId = 0;
+	
+	private Integer mSpinnerPos = 3;
+	
+	private ArrayList<ArrayList<CategoryData>> mCategoryTypeList = new ArrayList<ArrayList<CategoryData>>();
+	
+	public AdAddFragment()
+	{
+		
+	}
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState)
+	{
+		mMainControlBarActivity = (MainControlBarActivity)getActivity();
+		
+		mCategoryTypeList = new ArrayList<ArrayList<CategoryData>>();
+		ArrayList<CategoryData> tCategoryData = new ArrayList<CategoryData>();
+		
+		View rootView = inflater.inflate(R.layout.fragment_ad_add, container, false);
+		
+		mUserId = ((MainControlBarActivity)getActivity()).mSavedData.getUserId();
+		
+		mLayout = (LinearLayout)rootView.findViewById(R.id.layout);
+		final EditText tTitle = (EditText)rootView.findViewById(R.id.edit_title);
+		
+		final Spinner tCategorySpinner = (Spinner)rootView.findViewById(R.id.spinner1);
+		
+		ArrayList<String> tCategoryName = new ArrayList<String>();
+		tCategoryName.add("Выбрать");
+		
+		for(int i=0; i<mMainControlBarActivity.mCategoryData.size(); i++)
+		{
+			if(mMainControlBarActivity.mCategoryData.get(i).ParentId == 0)
+			{
+				tCategoryData.add(mMainControlBarActivity.mCategoryData.get(i));
+				tCategoryName.add(mMainControlBarActivity.mCategoryData.get(i).Name);
+			}
+		}
+		mCategoryTypeList.add(tCategoryData);
+		SpinnerArrayAdapter categoriesAdapter = new SpinnerArrayAdapter(getActivity(), 
+				R.layout.adapter_spinner, 
+				tCategoryName);
+		tCategorySpinner.setAdapter(categoriesAdapter);
+		tCategorySpinner.setSelection(0);
+		tCategorySpinner.setOnItemSelectedListener(this);
+		tCategorySpinner.setId(mSpinnerId);
+
+		final EditText tDesc = (EditText)rootView.findViewById(R.id.edit_ad_desc);
+		
+		Button tAdAddBtn = (Button)rootView.findViewById(R.id.confirm_add);
+		tAdAddBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				String ad_title = tTitle.getText().toString();
+				String ad_desc = tDesc.getText().toString();
+				
+				if(!ad_title.isEmpty()
+						&& !ad_desc.isEmpty()
+						&& mSelectedCategoryID != -1
+						)
+				{
+					try {
+						mEncodeTitle = ad_title;
+						mEncodeDesc = ad_desc;
+						mEncodeTitle = URLEncoder.encode(ad_title,"UTF-8");
+						mEncodeDesc = URLEncoder.encode(ad_desc,"UTF-8");
+			     		
+					   } catch (UnsupportedEncodingException e) {
+					       e.printStackTrace();
+					   } 
+					
+					Integer t = mSelectedCategoryID;
+					InsertDataFragment fragment = new InsertDataFragment(getString(R.string.server_address) 
+							+ "ad_add.php"
+							+ "?user_id=" + mUserId
+							+ "&ad_title=" + mEncodeTitle
+							+ "&ad_category=" + mSelectedCategoryID
+							+ "&ad_desc=" + mEncodeDesc,
+							getString(R.string.notif_ad_add),
+							getActivity(),
+							InsertDataFragment.AD_ADD);
+					FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+					fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+				}
+				
+			}
+		});
+		
+		return rootView;
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int position,
+			long id) {
+		
+		if(position != 0)
+		{
+			// TODO Auto-generated method stub
+			for(int i=0; i<mLayout.getChildCount(); i++)
+			{
+				if(parent.getId()<mLayout.getChildAt(i).getId() &&
+						mLayout.getChildAt(i).getTag() == "spinner")
+				{
+					int start_remove_id = mLayout.getChildAt(i).getId();
+					while(mLayout.getChildAt(i).getTag() == "spinner")
+					{
+						mCategoryTypeList.remove(start_remove_id);
+						mLayout.removeViewAt(i);
+						mSpinnerPos -= 1;
+						mSpinnerId -= 1;
+					}
+				}
+			}
+			mSelectedCategoryID = mCategoryTypeList.get(parent.getId()).get(position-1).Id;
+			
+			ArrayList<CategoryData> categoryData = new ArrayList<CategoryData>();
+			
+			
+			ArrayList<String> tSubCategoryName = new ArrayList<String>();
+			tSubCategoryName.add("Выбрать");
+			boolean tExist = false;
+			for(int i=0; i<mMainControlBarActivity.mCategoryData.size(); i++)
+			{
+				
+				if(mMainControlBarActivity.mCategoryData.get(i).ParentId == mSelectedCategoryID)
+				{
+					tExist = true;
+					categoryData.add(mMainControlBarActivity.mCategoryData.get(i));
+					tSubCategoryName.add(mMainControlBarActivity.mCategoryData.get(i).Name);
+				}
+				
+			}
+			if(tExist)
+			{
+				LayoutParams lparams = new LayoutParams(
+						   LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				Spinner sub_category = new Spinner(mMainControlBarActivity);
+				sub_category.setLayoutParams(lparams);
+				
+				SpinnerArrayAdapter categoriesAdapter = new SpinnerArrayAdapter(getActivity(), 
+						R.layout.adapter_spinner, 
+						tSubCategoryName);
+				sub_category.setAdapter(categoriesAdapter);
+				sub_category.setSelection(0);
+				sub_category.setOnItemSelectedListener(this);
+				mSpinnerId +=1;
+				sub_category.setId(mSpinnerId);
+				sub_category.setTag("spinner");
+				mLayout.addView(sub_category, mSpinnerPos += 1);
+				mCategoryTypeList.add(categoryData);
+			}
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+}

@@ -1,0 +1,776 @@
+package com.donearh.hearme;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.haarman.listviewanimations.ArrayAdapter;
+import com.haarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
+import com.haarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.haarman.listviewanimations.itemmanipulation.SwipeDismissAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+
+import android.support.v4.app.Fragment;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Picture;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.webkit.DownloadListener;
+import android.webkit.WebView;
+import android.webkit.WebView.PictureListener;
+import android.webkit.WebViewClient;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.ViewSwitcher.ViewFactory;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.text.Editable;
+import android.text.TextWatcher;
+
+import com.donearh.hearme.ImageCache.ImageCacheParams;
+import com.donearh.hearme.R.layout;
+
+@SuppressLint("JavascriptInterface")
+public class MainPage extends Fragment implements AdapterView.OnItemClickListener, 
+													OnDismissCallback,
+													OnRefreshListener,
+													OnScrollListener
+{
+	private static final String IMAGE_CACHE_DIR = "ad_list";
+
+	//private AdData mAdData;
+	private MyExpandableListItemAdapter mExpandableListItemAdapter;
+	
+	private WebView mImageSlider;
+	
+	private int mImageThumbSize;
+	private int mImageThumbSpacing;
+	private ImageFetcher mImageFetcher;
+	private MainControlBarActivity mMainControlBarActivity;
+	
+	private ArrayList<AdListData> mAdListData;
+	private ArrayList<WebView> mWebViewArray;
+	private ArrayList<Integer> mWebViewHeight;
+	
+	private ArrayList<Integer> mFavoriteAds;
+	private ArrayList<Integer> mFavoriteUsers;
+	//private AdAdapter mAdAdapter;
+	private ListView mListView;
+	
+	private int mInc = 0;
+	private ProgressBar mProgressBar = null;
+	
+	private View mBottomLoadCircle;
+	private int mPage = 1;
+	
+	boolean mDo = true;
+	boolean mUpdate = true;
+	
+	boolean mLoadData = false;
+	private WebView mWebView;
+	private static int webviewContentWidth = 0;
+	
+	SwipeRefreshLayout swipeLayout;
+	SwingBottomInAnimationAdapter swingBottomInAnimationAdapter;
+	
+	public MainPage()
+	{	
+		mAdListData = new ArrayList<AdListData>();
+		mWebViewArray = new ArrayList<WebView>();
+		mWebViewHeight = new ArrayList<Integer>();
+		
+		mFavoriteAds = new ArrayList<Integer>();
+		mFavoriteUsers = new ArrayList<Integer>();
+	}
+	
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+        mMainControlBarActivity = (MainControlBarActivity)getActivity();
+        mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_size);
+        mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
+        
+        ImageCacheParams cacheParams = new ImageCacheParams(getActivity(), IMAGE_CACHE_DIR);
+
+        cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
+
+        // The ImageFetcher takes care of loading images into our ImageView children asynchronously
+        mImageFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
+        mImageFetcher.setLoadingImage(R.drawable.ic_launcher);
+        mImageFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
+         
+        mFavoriteAds = ((MainControlBarActivity)getActivity()).mSavedData.getUserFavoriteAds();
+        mFavoriteUsers = ((MainControlBarActivity)getActivity()).mSavedData.getUserFavoriteUsers();
+    }
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState)
+	{
+		View image_slider = LayoutInflater.from(getActivity()).inflate(R.layout.main_image_slider, null);	
+		mImageSlider = (WebView)image_slider.findViewById(R.id.image_slider_webview);
+		mImageSlider.getSettings().setJavaScriptEnabled(true);
+		mImageSlider.loadUrl("file:///android_asset/imageslider/index.html");
+		mBottomLoadCircle = LayoutInflater.from(getActivity()).inflate(R.layout.bottom_load_circle, null);	
+		
+		View rootView = inflater.inflate(R.layout.main_page_fragment, container, false);
+		//mAdAdapter = new AdAdapter(getActivity());
+		
+		swipeLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_layout);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorScheme(R.color.light_blue, 
+	            R.color.night_green,
+	            R.color.light_orange, 
+	            R.color.night_red);
+		
+		mListView = (ListView) rootView.findViewById(R.id.listview);
+		
+		mExpandableListItemAdapter = new MyExpandableListItemAdapter(getActivity());
+		mExpandableListItemAdapter.setLimit(1);
+		swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(new SwipeDismissAdapter(mExpandableListItemAdapter, this));
+		swingBottomInAnimationAdapter.setInitialDelayMillis(300);
+		swingBottomInAnimationAdapter.setAbsListView(mListView);
+		mListView.setOnItemClickListener(this);
+		mListView.setOnScrollListener(this);
+		//mListView.addFooterView(mBottomLoadCircle);
+		
+		mListView.addHeaderView(image_slider);
+		loadCircleState(mAdListData);
+		mListView.setAdapter(swingBottomInAnimationAdapter);
+        // This listener is used to get the final width of the GridView and then calculate the
+        // number of columns and the width of each column. The width of each column is variable
+        // as the GridView has stretchMode=columnWidth. The column width is used to set the height
+        // of each view so we get nice square thumbnails.
+		mListView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                       /* if (mAdapter.getNumColumns() == 0) {
+                            final int numColumns = (int) Math.floor(
+                                    mGridView.getWidth() / (mImageThumbSize + mImageThumbSpacing));
+                            if (numColumns > 0) {
+                                final int columnWidth =
+                                        (mGridView.getWidth() / numColumns) - mImageThumbSpacing;
+                                mAdapter.setItemHeight(columnWidth);
+                                if (BuildConfig.DEBUG) {
+                                    Log.d(TAG, "onCreateView - numColumns set to " + numColumns);
+                                }
+                            }
+                        }*/
+                    }
+                });
+		LayoutParams lparams = new LayoutParams(
+				   LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		
+		
+		View v = (View)mBottomLoadCircle.findViewById(R.id.gr_back_circle);
+		Animation a = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_anim);
+		v.startAnimation(a);
+		
+      mWebView = new WebView(mMainControlBarActivity);
+      mWebView.setLayoutParams(lparams);
+      mWebView.getSettings().setJavaScriptEnabled(true);
+      mWebView.setSaveEnabled(true);
+      mWebView.addJavascriptInterface(new JavaScriptInterface(), "HTMLOUT");
+      mWebView.setWebViewClient(new WebViewClient() {
+          @Override
+          public void onPageFinished(WebView view, String url) {
+          	mWebView.loadUrl("javascript:window.HTMLOUT.getContentHeight(document.getElementsByTagName('html')[0].scrollHeight);");
+          }
+      });
+      for(int i=0; i<mAdListData.size(); i++)
+      {
+    	  
+    	  String text = "<html><body>"
+  	            + "<p align=\"justify\">"
+  	             + mAdListData.get(i).Desc
+  	            + "</p> "
+  	             + "</body></html>";
+    	  mWebViewArray.add(mWebView);
+    	  mWebViewArray.get(i).loadDataWithBaseURL("", text, "text/html", "utf-8", "");
+      }
+		
+		return rootView;
+		
+	}
+	
+	class JavaScriptInterface {
+        public void getContentHeight(String value) {
+            if (value != null) {
+            	
+            	mWebViewHeight.add(Integer.parseInt(value));
+            	//mInc += 1;
+            	//if(mInc == mAdListData.size())
+            	//	mExpandableListItemAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+	
+	public void setData(ArrayList<AdListData> data)
+	{
+		mAdListData = data;
+	}
+	
+	public void setRefreshedData(ArrayList<AdListData> data)
+	{
+		mAdListData = data;
+		mExpandableListItemAdapter.notifyDataSetChanged();
+		//swingBottomInAnimationAdapter.reset();
+		loadCircleState(data);
+		mListView.setAdapter(swingBottomInAnimationAdapter);
+		mLoadData = false;
+	}
+	
+	public void setMoreData(ArrayList<AdListData> data)
+	{
+		for(int i=0; i<data.size(); i++)
+		{
+			mAdListData.add(data.get(i));
+		}
+		loadCircleState(data);
+		mExpandableListItemAdapter.notifyDataSetChanged();
+		mLoadData = false;
+		//mListView.removeFooterView(mBottomLoadCircle);
+	}
+	
+	@Override
+    public void onResume() {
+        super.onResume();
+        mImageFetcher.setExitTasksEarly(false);
+        if(mExpandableListItemAdapter != null)
+        	mExpandableListItemAdapter.notifyDataSetChanged();
+    }
+	
+	@Override
+    public void onPause() {
+        super.onPause();
+        mImageFetcher.setPauseWork(false);
+        mImageFetcher.setExitTasksEarly(true);
+        mImageFetcher.flushCache();
+    }
+	
+	@Override
+    public void onDestroy() {
+        super.onDestroy();
+        mImageFetcher.closeCache();
+    }
+	
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		mPage = 1;
+		loadData(DownloadData.LOAD_AD_LIST);
+	}
+	
+	private void loadData(int loadtype)
+	{
+		int count = ((MainControlBarActivity)getActivity()).getAdCountInList();
+		int start = 0;
+		if(mPage != 0)
+		{
+			start = mPage * count - count;
+		}
+		DownloadData dd = new DownloadData(loadtype, getActivity());
+		dd.setMainPage(MainPage.this);
+		String str = getString(R.string.server_address);
+		switch (((MainControlBarActivity)getActivity()).getType()) {
+		case DrawerListAdapter.AD_ALL:
+			str += "get_ad_list.php?fake=1";
+			break;
+		case DrawerListAdapter.SIMPLE_SEARCH:
+			str += "get_main_search_result.php"
+					+ "?search_text=" + ((MainControlBarActivity)getActivity()).getMainSearchText();
+			break;
+		case DrawerListAdapter.AD_MY:
+			str += "get_my_ad_list.php"
+					+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId();
+			break;
+		case DrawerListAdapter.AD_FAVORITE_USERS:
+			str += "get_favorite_users_list.php"
+			+ ((MainControlBarActivity)getActivity()).mStringArrayUserID;
+			break;
+		case DrawerListAdapter.AD_FAVORITE:
+			str += "get_favorite_ad_list.php"
+			+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId()
+			+ ((MainControlBarActivity)getActivity()).mStringArrayAdID;
+			break;
+		default:
+			break;
+		}
+		dd.execute(str + "&start=" + start
+				+ "&item_count=" + count);
+	}
+	public void stopRefreshing()
+	{
+		swipeLayout.setRefreshing(false);
+	}
+	
+	public void loadCircleState(ArrayList<AdListData> data)
+	{
+		int count = ((MainControlBarActivity)getActivity()).getAdCountInList();
+		if(data.size() < count)
+		{
+			if(mListView.getFooterViewsCount() != 0)
+				mListView.removeFooterView(mBottomLoadCircle);
+		}
+		else
+		{
+			if(mListView.getFooterViewsCount() == 0)
+				mListView.addFooterView(mBottomLoadCircle);
+		}
+		
+	}
+	
+	public void enableLoadCircle()
+	{
+		//mBottomLoadCircle.setVisibility(View.VISIBLE);
+	}
+	
+	
+	private class MyExpandableListItemAdapter extends ExpandableListItemAdapter<Integer> {
+
+        private final Context mContext;
+        
+        private String mEncodeCommentText;
+        
+        public MyExpandableListItemAdapter(Context context) {
+            super(context, R.layout.fragment_main_page_card, R.id.card_title, R.id.card_content);
+            mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            // Size + number of columns for top empty row
+            return mAdListData.size();
+        }
+
+        @Override
+        public Integer getItem(int position) {
+            return mAdListData.get(position).Id;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return mAdListData.get(position).Id;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            // Two types of views, the normal ImageView and the top row of empty views
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return 1;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        private class titleViewHolder
+        {
+        	ImageView imageView;
+        	LinearLayout category_back;
+        	TextView title;
+        	TextView ad_category;
+        	TextView desc_text;
+        	TextView time;
+        	TextView date;
+        	LinearLayout btn_ad_details;
+        }
+        
+		@Override
+		public View getTitleView(int position, View convertView,
+				ViewGroup parent) {
+			titleViewHolder viewHolder;
+			if (convertView == null) {
+				viewHolder = new titleViewHolder();
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.main_page_title_adapter, null);
+				
+				viewHolder.imageView = new RecyclingImageView(mContext);
+				viewHolder.imageView = (ImageView)convertView.findViewById(R.id.user_img);
+				viewHolder.title = (TextView)convertView.findViewById(R.id.title);
+				viewHolder.category_back = (LinearLayout)convertView.findViewById(R.id.ad_category_back);
+				viewHolder.ad_category = (TextView)convertView.findViewById(R.id.ad_category);
+				viewHolder.desc_text = (TextView)convertView.findViewById(R.id.desc_text);
+				viewHolder.time = (TextView)convertView.findViewById(R.id.ad_time);
+				viewHolder.date = (TextView)convertView.findViewById(R.id.ad_date);
+				
+				viewHolder.btn_ad_details = (LinearLayout)convertView.findViewById(R.id.ad_details_btn);
+				viewHolder.btn_ad_details.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						int pos = (Integer)v.getTag();
+						Intent intent = new Intent(getActivity(), AdDetailsActivity.class);
+						intent.putExtra("type", ((MainControlBarActivity)getActivity()).getType());
+						intent.putExtra("ad_pos", pos);
+						intent.putExtra("page", mPage);
+						intent.putExtra("item_count", ((MainControlBarActivity)getActivity()).getAdCountInList());
+						intent.putExtra("ad_data", mAdListData);
+						
+						//((MainControlBarActivity)getActivity()).mAdListData = mAdListData;
+						getActivity().startActivity(intent);
+					}
+				});
+				
+				convertView.setTag(viewHolder);
+				convertView.setId(position);
+			}
+			else
+			{
+				viewHolder = (titleViewHolder)convertView.getTag();
+			}
+	            
+				viewHolder.title.setText(mAdListData.get(position).Title);
+	    		
+				viewHolder.btn_ad_details.setTag(position);
+	    		if(mAdListData.get(position).Category_id == 0)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_1));
+	    		else if(mAdListData.get(position).Category_id == 1)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_2));
+	    		else if(mAdListData.get(position).Category_id == 2)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_3));
+	    		else if(mAdListData.get(position).Category_id == 3)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_4));
+	    		else if(mAdListData.get(position).Category_id == 4)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_5));
+	    		else if(mAdListData.get(position).Category_id == 5)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_6));
+	    		else if(mAdListData.get(position).Category_id == 6)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_7));
+	    		else if(mAdListData.get(position).Category_id == 7)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_8));
+	    		else if(mAdListData.get(position).Category_id == 8)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_9));
+	    		else if(mAdListData.get(position).Category_id == 9)
+	    			viewHolder.category_back.setBackgroundDrawable(getResources().getDrawable(R.drawable.category_gradient_10));
+	    		
+	    		
+	    		String category_text = mAdListData.get(position).Category_name;
+	    		viewHolder.ad_category.setText(category_text);	    		
+	    		viewHolder.desc_text.setText(mAdListData.get(position).Desc);		
+	    		viewHolder.time.setText(mAdListData.get(position).Add_time);
+	    		viewHolder.date.setText(mAdListData.get(position).Add_date);
+	    		
+	            return convertView;
+		}
+		
+		private class ContentViewHolder
+		{
+			TextView text;
+			WebView webview;
+			ImageView favorite_img;
+			ImageView favorite_user_img;
+			LinearLayout mFavorite;
+			LinearLayout mFavorite_user;
+			RelativeLayout layout;
+			EditText comment_text;
+			Button btn_add_comment;
+		}
+
+		@Override
+		public View getContentView(int position, View convertView,
+				ViewGroup parent) {
+				
+				ContentViewHolder viewHolder;
+					if(convertView == null)
+					{
+						viewHolder = new ContentViewHolder();
+						convertView = LayoutInflater.from(mContext).inflate(R.layout.main_page_adapter, null);		
+						
+						viewHolder.webview = (WebView)convertView.findViewById(R.id.content_text);
+						
+						viewHolder.webview.setPictureListener(new PictureListener() {
+							
+							@Override
+							public void onNewPicture(final WebView view, final Picture picture) {
+								// TODO Auto-generated method stub
+								if(getAnimState())//getAnimItemPos().equals(view.getTag()))
+								{
+									setAnimate(view.getContentHeight(), (Integer)view.getTag());
+								}
+							}
+						});
+						
+						viewHolder.layout = (RelativeLayout)convertView.findViewById(R.id.layout);
+						viewHolder.favorite_img = (ImageView)convertView.findViewById(R.id.favorite_ad_img);
+						viewHolder.favorite_user_img = (ImageView)convertView.findViewById(R.id.favorite_user_img);
+						viewHolder.favorite_img.setTag("not_favorite");
+						viewHolder.favorite_user_img.setTag("not_favorite");
+						viewHolder.mFavorite = (LinearLayout)convertView.findViewById(R.id.favorite_ad_btn);
+						viewHolder.mFavorite_user = (LinearLayout)convertView.findViewById(R.id.favorite_user_btn);
+						viewHolder.mFavorite.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								ImageView img = (ImageView)v.findViewById(R.id.favorite_ad_img);
+								InsertData insertData = new InsertData(getActivity());
+								
+								if(img.getTag() == "not_favorite")
+								{
+									img.setImageResource(R.drawable.icon_ad_favorite_add);
+									insertData.execute(getString(R.string.server_address) 
+											+ "ad_add_favorite.php"
+											+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId()
+											+ "&ad_id=" + v.getId());
+									
+									mFavoriteAds.add(v.getId());
+									img.setTag("favorite");
+									((MainControlBarActivity)getActivity()).mSavedData.saveFavoriteAds(mFavoriteAds);
+								}
+								else
+								{
+									img.setImageResource(R.drawable.icon_ad_favorite_false);
+									insertData.execute(getString(R.string.server_address)
+											+ "ad_remove_favorite.php"
+											+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId()
+											+ "&ad_id=" + v.getId());
+									for(int i=0; i<mFavoriteAds.size(); i++)
+									{
+										if(mFavoriteAds.get(i) == v.getId())
+										{
+											mFavoriteAds.remove(i);
+											break;
+										}
+									}
+									img.setTag("not_favorite");
+									((MainControlBarActivity)getActivity()).mSavedData.saveFavoriteAds(mFavoriteAds);
+								}
+							}
+						});
+						viewHolder.mFavorite_user.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								ImageView img = (ImageView)v.findViewById(R.id.favorite_user_img);
+								InsertData insertData = new InsertData(getActivity());
+								if(img.getTag() == "not_favorite")
+								{
+									img.setImageResource(R.drawable.icon_ad_favorite_users_add);
+									insertData.execute(getString(R.string.server_address) 
+											+ "add_favorite_user.php"
+											+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId()
+											+ "&favorite_user_id=" + v.getTag());
+									mFavoriteUsers.add((Integer)v.getTag());
+									img.setTag("favorite");
+									((MainControlBarActivity)getActivity()).mSavedData.saveFavoriteUsers(mFavoriteUsers);
+								}
+								else if(img.getTag() == "favorite")
+								{
+									img.setImageResource(R.drawable.icon_ad_favorite_users_false);
+									insertData.execute(getString(R.string.server_address)
+											+ "remove_favorite_user.php"
+											+ "?user_id=" + ((MainControlBarActivity)getActivity()).mSavedData.getUserId()
+											+ "&favorite_user_id=" + v.getTag());
+									for(int i=0; i<mFavoriteUsers.size(); i++)
+									{
+										if(mFavoriteUsers.get(i).equals((Integer)v.getTag()))
+										{
+											mFavoriteUsers.remove(i);
+											break;
+										}
+									}
+									img.setTag("not_favorite");
+									((MainControlBarActivity)getActivity()).mSavedData.saveFavoriteUsers(mFavoriteUsers);
+								}
+								
+								for(int i=mListView.getFirstVisiblePosition(); i<=mListView.getLastVisiblePosition(); i++)
+								{
+									if(mListView.getChildAt(i) != null)
+									{
+										ImageView img2 = (ImageView)mListView.getChildAt(i).findViewById(R.id.favorite_user_img);
+										LinearLayout btn = (LinearLayout)mListView.getChildAt(i).findViewById(R.id.favorite_user_btn);
+										if(v.getTag() == btn.getTag())
+										{
+											if(img.getTag() == "favorite")
+											{
+												img2.setImageResource(R.drawable.icon_ad_favorite_users_add);
+												img2.setTag("favorite");
+											}
+											else if(img.getTag() == "not_favorite")
+											{
+												img2.setImageResource(R.drawable.icon_ad_favorite_users_false);
+												img2.setTag("not_favorite");
+											}
+										}
+									}
+								}
+							}
+						});
+						viewHolder.comment_text = (EditText)convertView.findViewById(R.id.edit_add_comment);
+						viewHolder.comment_text.addTextChangedListener(new TextWatcher() {
+							
+							@Override
+							public void onTextChanged(CharSequence s, int start, int before, int count) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							@Override
+							public void beforeTextChanged(CharSequence s, int start, int count,
+									int after) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+							@Override
+							public void afterTextChanged(Editable s) {
+								// TODO Auto-generated method stub
+								mEncodeCommentText = s.toString();
+							}
+						});
+						viewHolder.btn_add_comment = (Button)convertView.findViewById(R.id.btn_add_comment);
+						viewHolder.btn_add_comment.setOnClickListener(new View.OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								Integer pos = (Integer)v.getTag();
+								
+								try {
+									mEncodeCommentText = URLEncoder.encode(mEncodeCommentText,"UTF-8");
+								} catch (UnsupportedEncodingException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+								InsertData insert = new InsertData(mContext);
+								insert.execute(getString(R.string.server_address) + "comment_add.php"
+										+"?ad_id=" + mAdListData.get(pos).Id
+										+"&user_id=" + mAdListData.get(pos).User_id
+										+"&comment_text=" + mEncodeCommentText
+										+"&comment_rate=" +0);
+							}
+						});
+						viewHolder.mFavorite.setTag(mAdListData.get(position).Id);
+						viewHolder.mFavorite_user.setTag(mAdListData.get(position).User_id);
+						convertView.setId(mAdListData.get(position).Id);
+						convertView.setTag(viewHolder);
+					}
+					else
+					{
+						viewHolder = (ContentViewHolder)convertView.getTag();
+					}
+					//viewHolder.text.setText(mAdListData.get(position).Desc);
+					//LayoutParams params = viewHolder.layout.getLayoutParams();
+					// Changes the height and width to the specified *pixels*
+					//if(mWebViewHeight.size() != 0)
+					//	params.height =  mWebViewHeight.get(position);
+					//
+					viewHolder.btn_add_comment.setTag(position);
+					
+					for(int i=0; i<mFavoriteAds.size(); i++)
+					{
+						if(mFavoriteAds.get(i).equals(mAdListData.get(position).Id))
+						{
+							viewHolder.favorite_img.setImageResource(R.drawable.icon_ad_favorite_add);
+							viewHolder.favorite_img.setTag("favorite");
+							break;
+						}
+						else
+						{
+							viewHolder.favorite_img.setImageResource(R.drawable.icon_ad_favorite_false);
+							viewHolder.favorite_img.setTag("not_favorite");
+						}
+					}
+					viewHolder.favorite_user_img.setImageResource(R.drawable.icon_ad_favorite_users_false);
+					viewHolder.favorite_user_img.setTag("not_favorite");
+					for(int i=0; i<mFavoriteUsers.size(); i++)
+					{
+						if(mFavoriteUsers.get(i).equals(mAdListData.get(position).User_id))
+						{
+							viewHolder.favorite_user_img.setImageResource(R.drawable.icon_ad_favorite_users_add);
+							viewHolder.favorite_user_img.setTag("favorite");
+							break;
+						}
+						else
+						{
+							viewHolder.favorite_user_img.setImageResource(R.drawable.icon_ad_favorite_users_false);
+							viewHolder.favorite_user_img.setTag("not_favorite");
+						}
+					}
+		    		String text = "<html><body>"
+		    	            + "<p align=\"justify\">"
+		    	             + mAdListData.get(position).Desc
+		    	            + "</p> "
+		    	            + "<img src='dsa' >"
+		    	             + "</body></html>";
+		    		//viewHolder.webview.loadUrl(url);
+		    		viewHolder.webview.loadDataWithBaseURL("", text, "text/html", "utf-8", "");
+		            return convertView;
+		}
+
+    }
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+		// TODO Auto-generated method stub
+		for (int position : reverseSortedPositions) {
+			mExpandableListItemAdapter.remove(position);
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+            mImageFetcher.setPauseWork(true);
+        } else {
+            mImageFetcher.setPauseWork(false);
+        }
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+		
+		if(loadMore && totalItemCount != 0 && !mLoadData)
+		{
+			mLoadData = true;
+			mPage +=1;
+			loadData(DownloadData.GET_MORE_AD);
+		}
+	}
+
+	
+}

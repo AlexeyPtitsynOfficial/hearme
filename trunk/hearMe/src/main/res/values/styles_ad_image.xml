@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  
+	<style name="Theme.AdImage" parent="@style/Theme.AppCompat">
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+    
+    
+    <!-- the theme applied to the application or activity -->
+    
+</resources>

@@ -1,0 +1,676 @@
+package com.donearh.hearme;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+
+import com.donearh.hearme.InsertDataFragment.InsertCompleteListener;
+import com.donearh.hearme.datatypes.AreaData;
+import com.donearh.hearme.library.MainDatabaseHandler;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class AdAddFragment extends Fragment implements AdapterView.OnItemSelectedListener,
+														InsertCompleteListener
+{
+
+	private MainControlBarActivity mMainControlBarActivity;
+	
+	private LinearLayout mLayout;
+	private String mUserId;
+	private Integer mSelectedAreaID = -1;
+	private Integer mSelectedCategoryID = -1;
+	private String mEncodeTitle;
+	private String mEncodeDesc;
+	private Integer mSpinnerId = 0;
+	
+	private Integer mSpinnerPos = 5;
+	
+	private ArrayList<AreaData> mAreaData;
+	private ArrayList<Bitmap> mImagesList;
+	
+	private CustomImageScroller mImageScroller;
+	private ImagesAdapter mImagesAdapter;
+	
+	private ArrayList<ArrayList<CategoryData>> mCategoryTypeList = new ArrayList<ArrayList<CategoryData>>();
+	
+	//private TextView messageText;
+	private int serverResponseCode = 0;
+    
+    private String upLoadServerUri = null;
+    private String imagepath=null;
+	private Bitmap mImageBitmap;
+	
+	private ArrayList<ImageUploadTask> mImageUploadTasks;
+	
+	public AdAddFragment()
+	{
+		mAreaData = new ArrayList<AreaData>(); 
+		mImagesList = new ArrayList<Bitmap>();
+		mImageUploadTasks = new ArrayList<AdAddFragment.ImageUploadTask>();
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState)
+	{
+		super.onCreateView(inflater, container, saveInstanceState);
+		mMainControlBarActivity = (MainControlBarActivity)getActivity();
+		
+		upLoadServerUri = getString(R.string.server_address) + Urls.AD_IMAGE_UPLOAD;
+		//Get area data
+		MainDatabaseHandler db = new MainDatabaseHandler(getActivity());
+		mAreaData = db.getAreaData();
+		
+		mCategoryTypeList = new ArrayList<ArrayList<CategoryData>>();
+		ArrayList<CategoryData> tCategoryData = new ArrayList<CategoryData>();
+		
+		View rootView = inflater.inflate(R.layout.fragment_ad_add, container, false);
+		
+		mUserId = ((MainControlBarActivity)getActivity()).mUserData.get(LoginKeys.KEY_ID);
+		
+		mLayout = (LinearLayout)rootView.findViewById(R.id.layout);
+		final EditText tTitle = (EditText)rootView.findViewById(R.id.edit_title);
+		
+		ArrayList<String> tAreaName = new ArrayList<String>();
+		tAreaName.add("Выбрать");
+		Integer selectedAreaId = ((MainControlBarActivity)getActivity()).mSavedData.getAreaId();
+		int selectedAreaPos = -1;
+		for(int i=0; i<mAreaData.size(); i++)
+		{
+			if(selectedAreaId.equals(mAreaData.get(i).id))
+				selectedAreaPos = i;
+			
+			tAreaName.add(mAreaData.get(i).name);
+		}
+		
+		final Spinner tAreaSpinner = (Spinner)rootView.findViewById(R.id.spinner_area);
+		SpinnerArrayAdapter areaAdapter = new SpinnerArrayAdapter(getActivity(), 
+				R.layout.adapter_spinner, 
+				tAreaName);
+		tAreaSpinner.setAdapter(areaAdapter);
+		if(selectedAreaPos != -1)
+		{
+			tAreaSpinner.setSelection(selectedAreaPos+1);
+		}
+		else
+		{
+			tAreaSpinner.setSelection(0);
+		}
+		tAreaSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				if(position != 0)
+				{
+					((MainControlBarActivity)getActivity()).mSavedData.saveSelectedArea(mAreaData.get(position-1).id);
+					mSelectedAreaID = mAreaData.get(position-1).id;
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		final Spinner tCategorySpinner = (Spinner)rootView.findViewById(R.id.spinner1);
+		
+		ArrayList<String> tCategoryName = new ArrayList<String>();
+		tCategoryName.add("Выбрать");
+		
+		for(int i=0; i<mMainControlBarActivity.mCategoryData.size(); i++)
+		{
+			if(mMainControlBarActivity.mCategoryData.get(i).ParentId == 0)
+			{
+				tCategoryData.add(mMainControlBarActivity.mCategoryData.get(i));
+				tCategoryName.add(mMainControlBarActivity.mCategoryData.get(i).Name);
+			}
+		}
+		mCategoryTypeList.add(tCategoryData);
+		SpinnerArrayAdapter categoriesAdapter = new SpinnerArrayAdapter(getActivity(), 
+				R.layout.adapter_spinner, 
+				tCategoryName);
+		tCategorySpinner.setAdapter(categoriesAdapter);
+		tCategorySpinner.setSelection(0);
+		tCategorySpinner.setOnItemSelectedListener(this);
+		tCategorySpinner.setId(mSpinnerId);
+
+		final EditText tDesc = (EditText)rootView.findViewById(R.id.edit_ad_desc);
+		
+		Button tUploadImageBtn = (Button)rootView.findViewById(R.id.image_add_btn);
+		tUploadImageBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+	            intent.setType("image/*");
+	            intent.setAction(Intent.ACTION_GET_CONTENT);
+	            getActivity().startActivityForResult(Intent.createChooser(intent, "Выберите источник"), 1);
+			}
+		});
+		
+		Button tAdAddBtn = (Button)rootView.findViewById(R.id.confirm_add);
+		tAdAddBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				String ad_title = tTitle.getText().toString();
+				String ad_desc = tDesc.getText().toString();
+				
+				if(!ad_title.isEmpty()
+						&& !ad_desc.isEmpty()
+						&& mSelectedCategoryID != -1
+						)
+				{
+					try {
+						mEncodeTitle = ad_title;
+						mEncodeDesc = ad_desc;
+						mEncodeTitle = URLEncoder.encode(ad_title,"UTF-8");
+						mEncodeDesc = URLEncoder.encode(ad_desc,"UTF-8");
+			     		
+					   } catch (UnsupportedEncodingException e) {
+					       e.printStackTrace();
+					   } 
+					
+					Integer t = mSelectedCategoryID;
+					
+					URLWithParams urlWithParams = new URLWithParams();
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+					params.add(new BasicNameValuePair("tag", AdTags.insert_new_ad));
+					params.add(new BasicNameValuePair("user_id", mUserId));
+					params.add(new BasicNameValuePair("ad_title", mEncodeTitle));
+					params.add(new BasicNameValuePair("ad_area", mSelectedAreaID.toString()));
+					params.add(new BasicNameValuePair("ad_category", mSelectedCategoryID.toString()));
+					params.add(new BasicNameValuePair("ad_desc", mEncodeDesc));
+					
+					urlWithParams.url = getString(R.string.server_address) + Urls.AD_API;
+					urlWithParams.nameValuePairs = params;
+					
+					InsertDataFragment fragment = new InsertDataFragment();
+					fragment.setListener(AdAddFragment.this);
+					fragment.startInsert(urlWithParams, 
+							InsertDataFragment.AD_ADD, 
+							getString(R.string.notif_ad_add));
+					FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+					fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+				}
+				
+			}
+		});
+		
+		mImageScroller = (CustomImageScroller)rootView.findViewById(R.id.image_scroller);
+		mImagesAdapter = new ImagesAdapter();
+		mImageScroller.setAdapter(getActivity(), mImagesAdapter);
+		return rootView;
+	}
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+         
+		
+        if (requestCode == 1 && resultCode == getActivity().RESULT_OK) {
+            //Bitmap photo = (Bitmap) data.getData().getPath(); 
+        	String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        	Uri selectedImageUri = data.getData();
+        	  Cursor cursor = getActivity().getContentResolver().query(selectedImageUri,
+        	    filePathColumn, null, null, null);
+        	  cursor.moveToFirst();
+
+        	  int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        	  String picturePath = cursor.getString(columnIndex);
+        	  cursor.close();
+
+        	  decodeFile(picturePath);
+        	  mImageUploadTasks.add(new ImageUploadTask());
+        	  mImageUploadTasks.get(mImageUploadTasks.size()-1).execute();
+            /*imagepath = getPath(selectedImageUri);
+            Bitmap bitmap=BitmapFactory.decodeFile(imagepath);
+            mImagesList.add(bitmap);
+            //messageText.setText("Uploading file path:" +imagepath);
+            mImagesAdapter.notifyDataSetChanged();
+            mImageScroller.setAdapter(getActivity(), mImagesAdapter);
+            dialog = ProgressDialog.show(getActivity(), "", "Uploading file...", true);
+            //messageText.setText("uploading started.....");
+            new Thread(new Runnable() {
+                public void run() {
+                                     
+                     uploadFile(imagepath);
+                                              
+                }
+              }).start(); */
+             
+        }
+    }
+	
+	public void decodeFile(String filePath) {
+		 
+        // Decode image size
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, o);
+
+        // The new size we want to scale to
+        final int REQUIRED_SIZE = 1024;
+
+        // Find the correct scale value. It should be the power of 2.
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+        	if (width_tmp < REQUIRED_SIZE && height_tmp < REQUIRED_SIZE)
+        		break;
+        	width_tmp /= 2;
+        	height_tmp /= 2;
+        	scale *= 2;
+        }
+
+        // Decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        mImageBitmap = BitmapFactory.decodeFile(filePath, o2);
+        mImagesList.add(mImageBitmap);
+        mImagesAdapter.notifyDataSetChanged();
+        mImageScroller.setAdapter(getActivity(), mImagesAdapter);
+        //image.setImageBitmap(bitmap);
+	}
+	/*public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }*/
+	
+	class ImageUploadTask extends AsyncTask<Void, Void, String> 
+	{
+		 private String webAddressToPost = upLoadServerUri;
+
+		 @Override
+		 protected void onPreExecute() 
+		 {
+		 }
+
+		 @Override
+		 protected String doInBackground(Void... params) 
+		 {
+			 if(!isCancelled())
+			 {
+			  try 
+			  {
+				   HttpClient httpClient = new DefaultHttpClient();
+				   HttpContext localContext = new BasicHttpContext();
+				   HttpPost httpPost = new HttpPost(webAddressToPost);
+		
+				   MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+		
+				   ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				   mImageBitmap.compress(CompressFormat.JPEG, 100, bos);
+				   byte[] data = bos.toByteArray();
+				   String file = Base64.encodeBytes(data);
+		
+				   entity.addPart("image_file", new StringBody(file));
+				   entity.addPart("someOtherStringToSend", new StringBody("your string here"));
+		
+				   httpPost.setEntity(entity);
+				   HttpResponse response = httpClient.execute(httpPost,localContext);
+				   BufferedReader reader = new BufferedReader(new InputStreamReader(
+				     response.getEntity().getContent(), "UTF-8"));
+		
+				   String sResponse = reader.readLine();
+				   return sResponse;
+			  } catch (Exception e) {
+			   // something went wrong. connection with the server error
+			  }
+			 }
+			  return null;
+		 }
+
+		 @Override
+		 protected void onPostExecute(String result)
+		 {
+		 }
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int position,
+			long id) {
+		
+		if(position != 0)
+		{
+			// TODO Auto-generated method stub
+			for(int i=0; i<mLayout.getChildCount(); i++)
+			{
+				if(parent.getId()<mLayout.getChildAt(i).getId() &&
+						mLayout.getChildAt(i).getTag() == "spinner")
+				{
+					int start_remove_id = mLayout.getChildAt(i).getId();
+					while(mLayout.getChildAt(i).getTag() == "spinner")
+					{
+						mCategoryTypeList.remove(start_remove_id);
+						mLayout.removeViewAt(i);
+						mSpinnerPos -= 1;
+						mSpinnerId -= 1;
+					}
+				}
+			}
+			mSelectedCategoryID = mCategoryTypeList.get(parent.getId()).get(position-1).Id;
+			
+			ArrayList<CategoryData> categoryData = new ArrayList<CategoryData>();
+			
+			
+			ArrayList<String> tSubCategoryName = new ArrayList<String>();
+			tSubCategoryName.add("Выбрать");
+			boolean tExist = false;
+			for(int i=0; i<mMainControlBarActivity.mCategoryData.size(); i++)
+			{
+				
+				if(mMainControlBarActivity.mCategoryData.get(i).ParentId == mSelectedCategoryID)
+				{
+					tExist = true;
+					categoryData.add(mMainControlBarActivity.mCategoryData.get(i));
+					tSubCategoryName.add(mMainControlBarActivity.mCategoryData.get(i).Name);
+				}
+				
+			}
+			if(tExist)
+			{
+				LayoutParams lparams = new LayoutParams(
+						   LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+				Spinner sub_category = new Spinner(mMainControlBarActivity);
+				sub_category.setLayoutParams(lparams);
+				
+				SpinnerArrayAdapter categoriesAdapter = new SpinnerArrayAdapter(getActivity(), 
+						R.layout.adapter_spinner, 
+						tSubCategoryName);
+				sub_category.setAdapter(categoriesAdapter);
+				sub_category.setSelection(0);
+				sub_category.setOnItemSelectedListener(this);
+				mSpinnerId +=1;
+				sub_category.setId(mSpinnerId);
+				sub_category.setTag("spinner");
+				mLayout.addView(sub_category, mSpinnerPos += 1);
+				mCategoryTypeList.add(categoryData);
+			}
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getInsertCompleteState() {
+		// TODO Auto-generated method stub
+		((MainControlBarActivity)getActivity()).selectItem(DrawerListAdapter.AD_ALL);
+	}
+	
+	public class ImagesAdapter extends BaseAdapter
+	{
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return mImagesList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return mImagesList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		private class ViewHolder
+		{
+			ImageView image;
+			Button cancel;
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			ViewHolder viewHolder = null;
+			if(convertView == null)
+			{
+				viewHolder = new ViewHolder();
+				convertView = convertView = LayoutInflater.from(getActivity()).inflate(R.layout.adapter_upload_images, null);
+				viewHolder.image = (ImageView)convertView.findViewById(R.id.image);
+				viewHolder.cancel = (Button)convertView.findViewById(R.id.cancel_upload);
+				viewHolder.cancel.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Integer pos = (Integer)v.getTag();
+						mImageUploadTasks.get(pos).cancel(true);
+						mImageUploadTasks.remove(pos);
+						mImagesList.remove(pos);
+						mImagesAdapter.notifyDataSetChanged();
+				        mImageScroller.setAdapter(getActivity(), mImagesAdapter);
+					}
+				});
+				
+				convertView.setTag(viewHolder);
+			}
+			else
+			{
+				viewHolder = (ViewHolder)convertView.getTag();
+			}
+			viewHolder.cancel.setTag(position);
+			viewHolder.image.setImageBitmap(mImagesList.get(position));
+			
+			return convertView;
+		}
+		
+	}
+	/*public int uploadFile(String sourceFileUri) {
+        
+        
+        String fileName = sourceFileUri;
+
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;  
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024; 
+        File sourceFile = new File(sourceFileUri); 
+         
+        if (!sourceFile.isFile()) {
+             
+             dialog.dismiss(); 
+              
+             Log.e("uploadFile", "Source File not exist :"+imagepath);
+              
+             getActivity().runOnUiThread(new Runnable() {
+                 public void run() {
+                     //messageText.setText("Source File not exist :"+ imagepath);
+                 }
+             }); 
+              
+             return 0;
+          
+        }
+        else
+        {
+             try { 
+                  
+                   // open a URL connection to the Servlet
+                 FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                 URL url = new URL(upLoadServerUri);
+                  
+                 // Open a HTTP  connection to  the URL
+                 conn = (HttpURLConnection) url.openConnection(); 
+                 conn.setDoInput(true); // Allow Inputs
+                 conn.setDoOutput(true); // Allow Outputs
+                 conn.setUseCaches(false); // Don't use a Cached Copy
+                 conn.setRequestMethod("POST");
+                 conn.setRequestProperty("Connection", "Keep-Alive");
+                 conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                 conn.setRequestProperty("uploaded_file", fileName); 
+                  
+                 dos = new DataOutputStream(conn.getOutputStream());
+        
+                 dos.writeBytes(twoHyphens + boundary + lineEnd); 
+                 dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
+                                           + fileName + "\"" + lineEnd);
+                  
+                 dos.writeBytes(lineEnd);
+        
+                 // create a buffer of  maximum size
+                 bytesAvailable = fileInputStream.available(); 
+        
+                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                 buffer = new byte[bufferSize];
+        
+                 // read file and write it into form...
+                 bytesRead = fileInputStream.read(buffer, 0, bufferSize);  
+                    
+                 while (bytesRead > 0) {
+                      
+                   dos.write(buffer, 0, bufferSize);
+                   bytesAvailable = fileInputStream.available();
+                   bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                   bytesRead = fileInputStream.read(buffer, 0, bufferSize);   
+                    
+                  }
+        
+                 // send multipart form data necesssary after file data...
+                 dos.writeBytes(lineEnd);
+                 dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+        
+                 // Responses from the server (code and message)
+                 serverResponseCode = conn.getResponseCode();
+                 String serverResponseMessage = conn.getResponseMessage();
+                   
+                 Log.i("uploadFile", "HTTP Response is : "
+                         + serverResponseMessage + ": " + serverResponseCode);
+                  
+                 if(serverResponseCode == 200){
+                      
+                     getActivity().runOnUiThread(new Runnable() {
+                          public void run() {
+                              String msg = "File Upload Completed.\n\n See uploaded file here : \n\n"
+                                    +" F:/wamp/wamp/www/uploads";
+                              //messageText.setText(msg);
+                              Toast.makeText(getActivity(), "File Upload Complete.", Toast.LENGTH_SHORT).show();
+                          }
+                      });                
+                 }    
+                  
+                 //close the streams //
+                 fileInputStream.close();
+                 dos.flush();
+                 dos.close();
+                   
+            } catch (MalformedURLException ex) {
+                 
+                dialog.dismiss();  
+                ex.printStackTrace();
+                 
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                       // messageText.setText("MalformedURLException Exception : check script url.");
+                        Toast.makeText(getActivity(), "MalformedURLException", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                 
+                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);  
+            } catch (Exception e) {
+                 
+                dialog.dismiss();  
+                e.printStackTrace();
+                 
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        //messageText.setText("Got Exception : see logcat ");
+                        Toast.makeText(getActivity(), "Got Exception : see logcat ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Log.e("Upload file to server Exception", "Exception : "  + e.getMessage(), e);  
+            }
+            dialog.dismiss();       
+            return serverResponseCode; 
+             
+         } // End else block 
+       }*/
+}

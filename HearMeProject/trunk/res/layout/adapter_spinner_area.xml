@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/gradient_night_hor"
+    android:orientation="horizontal" >
+    
+    <RelativeLayout
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginLeft="8dp"
+        >
+	<View 
+   	    android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/circle_avatar"
+        android:layout_centerInParent="true"
+    	    />
+    <com.donearh.hearme.RecyclingImageView
+        android:id="@+id/icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/area_0"
+        android:layout_centerInParent="true"
+        />
+    </RelativeLayout>
+    <TextView 
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:lines="2"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical"
+        />
+</LinearLayout>

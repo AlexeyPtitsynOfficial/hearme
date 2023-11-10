@@ -1,0 +1,41 @@
+package com.donearh.hearme;
+
+import java.util.ArrayList;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+
+public class AdapterImageSlider  extends FragmentStatePagerAdapter{
+
+	public static ArrayList<String> mSliderImage = new ArrayList<String>();
+	
+	public AdapterImageSlider(FragmentManager fm) {
+		super(fm);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ArrayList<String> setData(ArrayList<String> data)
+	{
+		return mSliderImage = data;
+	}
+
+	@Override
+	public Fragment getItem(int position) {
+		// TODO Auto-generated method stub
+		return FragmentImageHolder.newInstance(position, mSliderImage.get(position));
+	}
+
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return mSliderImage.size();
+	}
+	
+	@Override
+    public int getItemPosition(Object object){
+        return PagerAdapter.POSITION_NONE;
+    }
+
+}

@@ -1,0 +1,147 @@
+package com.donearh.hearme;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+
+
+public class SavedData
+{
+
+	public static final String PREFS_NAME = "UserProfile";
+	private SharedPreferences mPrefs;
+	
+	public SavedData(Context context)
+	{
+		mPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+		String text = "";
+	}
+	
+	public boolean isFirstAppRun()
+	{
+		if(mPrefs.getBoolean("first_run", true))
+		{
+			Editor editor = mPrefs.edit();
+			editor.putBoolean("first_run", false);
+			editor.commit();
+			
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	public void saveLowerBarPos(boolean is_open)
+	{
+		Editor editor = mPrefs.edit();
+		editor.putBoolean("lower_bar_open", is_open);
+		editor.commit();
+	}
+	
+	public boolean getLowerBarPos()
+	{
+		return mPrefs.getBoolean("lower_bar_open", false);
+	}
+	
+	public void saveLowerBarArrayPos(ArrayList<Integer> menu_type)
+	{
+		Editor editor = mPrefs.edit();
+        try {	
+            editor.putString("lower_bar_pos_array", ObjectSerializer.serialize(menu_type));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        editor.commit();
+	}
+	
+	public void saveFavoriteAds(ArrayList<Integer> ads_id)
+	{
+		Editor editor = mPrefs.edit();
+		try
+		{
+			editor.putString("favorite_ads", ObjectSerializer.serialize(ads_id));
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		editor.commit();
+	}
+	
+	public void saveFavoriteUsers(ArrayList<Integer> users_id)
+	{
+		Editor editor = mPrefs.edit();
+		try
+		{
+			editor.putString("favorite_users", ObjectSerializer.serialize(users_id));
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		editor.commit();
+	}
+	
+	public ArrayList<Integer> getUserFavoriteAds()
+	{
+		ArrayList<Integer> array = new ArrayList<Integer>();
+		try
+		{
+			array = (ArrayList<Integer>) ObjectSerializer.deserialize(mPrefs.getString("favorite_ads", ObjectSerializer.serialize(new ArrayList<Integer>())));
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return array;
+	}
+	
+	public ArrayList<Integer> getUserFavoriteUsers()
+	{
+		ArrayList<Integer> array = new ArrayList<Integer>();
+		try
+		{
+			array = (ArrayList<Integer>) ObjectSerializer.deserialize(mPrefs.getString("favorite_users", ObjectSerializer.serialize(new ArrayList<Integer>())));
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return array;
+	}
+	
+	public ArrayList<Integer> getLowerBarArrayPos()
+	{
+		ArrayList<Integer> tArray = new ArrayList<Integer>();
+		try 
+        {
+			tArray = (ArrayList<Integer>) ObjectSerializer.deserialize(mPrefs.getString("lower_bar_pos_array", ObjectSerializer.serialize(new ArrayList<Integer>())));
+        	
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    	return tArray;
+	}
+}

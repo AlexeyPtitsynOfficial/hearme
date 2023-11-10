@@ -1,0 +1,115 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <TextView
+            android:id="@+id/filter_info"
+            android:layout_width="match_parent"
+       		android:layout_height="wrap_content"
+       		android:padding="2dp"
+       		android:gravity="center"
+       		android:textSize="10sp"
+            />
+        <android.support.v7.widget.Toolbar 
+             android:id="@+id/tool_bar"
+	        android:layout_width="match_parent"
+	        android:layout_height="?attr/actionBarSize"
+	        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+	        android:background="?attr/colorPrimary"
+	        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+	        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        	<Spinner
+	            android:id="@+id/area_spinner"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" />
+        </android.support.v7.widget.Toolbar>
+</android.support.design.widget.AppBarLayout>
+
+<android.support.v4.widget.DrawerLayout
+	android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    
+   <com.donearh.hearme.MySlidingPaneLayout
+	        android:id="@+id/sliding_pane"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent">
+        <FrameLayout 
+	        android:id="@+id/menu_frame"
+	        android:layout_width="250dp"
+	    	android:layout_height="match_parent"
+	    	android:gravity="top"
+        ></FrameLayout>
+    <RelativeLayout
+        android:layout_width="300dp"
+    	android:layout_height="match_parent"
+    	android:layout_weight="1"
+    	android:orientation="vertical"
+        >
+         <FrameLayout 
+	        android:id="@+id/content_frame"
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent"
+        ></FrameLayout>
+    	<FrameLayout 
+	        android:id="@+id/lower_control"
+	        android:layout_width="match_parent"
+	    	android:layout_height="50dp"
+	    	android:layout_alignParentBottom="true"
+        ></FrameLayout>
+    </RelativeLayout>
+    	
+   </com.donearh.hearme.MySlidingPaneLayout>
+    <FrameLayout 
+	        android:id="@+id/filter_frame"
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent"
+	    	android:gravity="top"
+        ></FrameLayout>
+    <FrameLayout 
+	        android:id="@+id/info_frame"
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent"
+        ></FrameLayout>
+    <FrameLayout 
+	        android:id="@+id/filter_state"
+	        android:layout_width="match_parent"
+	    	android:layout_height="100dp"
+	    	android:gravity="top"
+        ></FrameLayout>
+    
+    <FrameLayout
+	        android:id="@+id/start_app_frame"
+	        android:layout_width="match_parent"
+	    	android:layout_height="match_parent"
+        ></FrameLayout>
+    <ListView 
+        android:id="@+id/left_drawer"
+        android:cacheColorHint="@android:color/transparent"
+        android:layout_width="270dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent"
+        android:scrollbars="none"
+        android:background="@drawable/gradient_night_hor"
+        ></ListView>
+    
+    
+    
+</android.support.v4.widget.DrawerLayout>
+
+	
+    
+</LinearLayout>  

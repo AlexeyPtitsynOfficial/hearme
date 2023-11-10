@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical" >
+    
+    <EditText
+        android:id="@+id/search_text"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:hint="@string/search_text"
+	    android:singleLine="true"
+	    android:maxLines="1"
+        />
+	<CheckBox 
+	    android:id="@+id/filter_by_authors"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/in_authors"
+	    android:checked="true"
+	    />
+	<CheckBox 
+	    android:id="@+id/filter_by_titles"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/in_titles"
+	    android:checked="true"
+	    />
+	<CheckBox 
+	    android:id="@+id/filter_by_desc"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/in_desc"
+	    android:checked="true"
+	    />
+	<Button 
+	    android:id="@+id/btn_apply"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@drawable/selector_button"
+	    android:text="@string/apply"
+	    android:textColor="@android:color/white"
+	    android:textStyle="bold"
+	    android:layout_margin="5dp"
+	    />
+</LinearLayout>

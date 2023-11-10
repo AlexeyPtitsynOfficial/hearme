@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<!-- saved from url=(0124)http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme -->
+<html style="height: 100%;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow</title>
+    <link rel="shortcut icon" href="http://cdn.sstatic.net/stackoverflow/img/favicon.ico">
+    <link rel="apple-touch-icon image_src" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow" href="http://stackoverflow.com/opensearch.xml">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:domain" content="stackoverflow.com">
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon@2.png?v=fde65a5a78c6">
+    <meta name="og:title" content="Switching between Android Navigation Drawer Image and Up Carat when using fragments">
+    <meta name="og:description" content="When using the Navigation Drawer the Android devs are recommending that in the ActionBar &quot;only those screens that are represented in the Navigation Drawer should actually have the Navigation Drawer ">
+    <meta name="og:url" content="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme">
+    <link rel="canonical" href="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow.htm">
+
+    
+    
+    <script async="" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/beacon.js"></script><script type="text/javascript" async="" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/ga.js"></script><script type="text/javascript" async="" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/quant.js"></script><script type="text/javascript" async="" src="http://static.adzerk.net/ados.js"></script><script type="text/javascript" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/jquery.min.js"></script>
+    <script src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/stub.en.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/all.css">
+    
+    <link rel="alternate" type="application/atom+xml" title="Feed for question &#39;Switching between Android Navigation Drawer Image and Up Carat when using fragments&#39;" href="http://stackoverflow.com/feeds/question/17258020">
+    <script type="text/javascript">
+        
+        StackExchange.ready(function () {
+            StackExchange.using("postValidation", function () {
+                StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+            });
+
+            
+            StackExchange.question.init({votesCast:[],autoShowCommentHelp:true,showAnswerHelp:true,totalCommentCount:1,shownCommentCount:1,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:17258020});
+
+            styleCode();
+
+                StackExchange.realtime.subscribeToQuestion('1', '17258020');
+            
+                    });
+    </script>
+
+
+    <script type="text/javascript">
+        StackExchange.init({"locale":"en","stackAuthUrl":"https://stackauth.com","serverTime":1384865033,"styleCode":true,"enableUserHovercards":true,"site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","enableSocialMediaInSharePopup":true},"user":{"fkey":"82d96d8473788330fb1b3b365d789a24","isRegistered":true,"userType":3,"userId":2377578,"accountId":2760597,"gravatar":"<div><img src=\"https://www.gravatar.com/avatar/1940e4929f6e6e504c98114cbc93b7a6?s=32&d=identicon&r=PG\" alt=\"\" width=\"32\" height=\"32\"></div>","profileUrl":"http://stackoverflow.com/users/2377578/user2377578","notificationsUnviewedCount":4,"inboxUnviewedCount":0}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.en.js":"e0bbd4760e83","js/moderator.en.js":"1a411fd265fe","js/full-anon.en.js":"dbb1260a453e","js/full.en.js":"7bd83af491d6","js/wmd.en.js":"bd9234d44a40","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/third-party/jquery.autocomplete.min.en.js":"","js/mobile.en.js":"d1d834ef85d2","js/help.en.js":"d3cc74d8a93a","js/tageditor.en.js":"6d51a5f8d7f3","js/tageditornew.en.js":"111b781cf314","js/inline-tag-editing.en.js":"f951bd09dc69","js/revisions.en.js":"33fd38144303","js/review.en.js":"f45b4ec094ea","js/tagsuggestions.en.js":"e4e7b952fcc7","js/post-validation.en.js":"c275fe37d674","js/explore-qlist.en.js":"73825bd006fc","js/events.en.js":"53bc48767091"});
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+        
+    </script>
+    
+<style type="text/css"></style><script async="" type="text/javascript" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/full.en.js"></script><script async="" type="text/javascript" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/post-validation.en.js"></script><script async="" type="text/javascript" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/prettify-full.en.js"></script><script async="" type="text/javascript" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/wmd.en.js"></script><link href="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/sidebar.min.css" type="text/css" rel="stylesheet"><link type="text/css" rel="stylesheet" charset="UTF-8" href="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/translateelement.css"><script type="text/javascript" charset="UTF-8" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/main_ru.js"></script><script type="text/javascript" charset="UTF-8" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/element_main.js"></script><style>.global_header { top: 40px !important; }</style></head>
+<body class="question-page" style="position: relative; min-height: 100%; top: 40px;"><div class="skiptranslate" style=""><iframe id=":0.container" class="goog-te-banner-frame skiptranslate" frameborder="0" src="javascript:''" style="visibility:visible"></iframe></div>
+    <noscript>&lt;div id="noscript-padding"&gt;&lt;/div&gt;</noscript>
+    <div id="notify-container"></div>
+    <div id="overlay-header"></div>
+    <div id="custom-header"></div>
+    <div class="container">
+        <div id="header">
+            <div id="portalLink">
+                <a class="genu" onclick="StackExchange.ready(function(){genuwine.click();});return false;">Stack Exchange</a>
+                    <a class="unreadCount newNotices" title="you have unread notices">4</a>
+            </div>
+            <div id="topbar">
+                <div id="hlinks">
+                    
+<span id="hlinks-user">        <span class="profile-triangle">▼</span><a href="http://stackoverflow.com/users/2377578/user2377578" class="profile-link">user2377578</a>&nbsp;<a href="http://stackoverflow.com/users/2377578/user2377578?tab=reputation"><span class="reputation-score" title="your reputation; view reputation changes" dir="ltr">6</span></a><span title="2 bronze badges"><span class="badge3"></span><span class="badgecount">2</span></span>
+ <span class="lsep">|</span>
+
+</span>
+<span id="hlinks-nav"></span>
+<span id="hlinks-custom">            <a href="http://chat.stackoverflow.com/">chat</a>
+
+ <span class="lsep">|</span>
+                <a href="http://meta.stackoverflow.com/">meta</a>
+
+ <span class="lsep">|</span>
+            <a href="http://stackoverflow.com/about">about</a>
+
+ <span class="lsep">|</span>
+            <a href="http://stackoverflow.com/help">help</a>
+</span>
+                </div>
+                <div id="hsearch">
+                    <form id="search" action="http://stackoverflow.com/search" method="get" autocomplete="off">
+                        <div>
+                            <input autocomplete="off" name="q" class="textbox" placeholder="search" tabindex="1" type="text" maxlength="240" size="28" value="">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br class="cbt">
+            <div id="hlogo">
+                <a href="http://stackoverflow.com/">
+                    Stack Overflow
+                </a>
+            </div>
+            <div id="hmenus">
+                <div class="nav mainnavs ">
+                    <ul>
+                            <li class="youarehere"><a id="nav-questions" href="http://stackoverflow.com/questions">Questions</a></li>
+                            <li><a id="nav-tags" href="http://stackoverflow.com/tags">Tags</a></li>
+                            <li><a id="nav-users" href="http://stackoverflow.com/users">Users</a></li>
+                            <li><a id="nav-badges" href="http://stackoverflow.com/help/badges">Badges</a></li>
+                            <li><a id="nav-unanswered" href="http://stackoverflow.com/unanswered">Unanswered</a></li>
+                    </ul>
+                </div>
+                <div class="nav askquestion">
+                    <ul>
+                        <li>
+                            <a id="nav-askquestion" href="http://stackoverflow.com/questions/ask">Ask Question</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <div id="content">
+            
+
+<div itemscope="" itemtype="http://schema.org/Article">
+	<link itemprop="image" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
+			<div id="question-header">
+			<h1 itemprop="name"><a href="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow.htm" class="question-hyperlink">Switching between Android Navigation Drawer Image and Up Carat when using fragments</a></h1>
+		</div>
+			<div id="mainbar">
+
+			
+
+<div class="question" data-questionid="17258020" id="question">
+    
+                <script type="text/javascript">
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk482975350",4).setZone(43) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow" id="adzerk482975350">
+            </div>  
+
+
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17258020">
+    <a class="vote-up-off" title="This question shows research effort; it is useful and clear">up vote</a>
+    <span class="vote-count-post ">9</span>
+    <a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful">down vote</a>
+    
+    <a class="star-off" href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme#" title="This is a favorite question (click again to undo)">favorite</a>
+    <div class="favoritecount"><b>4</b></div>   
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="description">
+
+        <p>When using the Navigation Drawer the Android devs are recommending that in the ActionBar "only those screens that are represented in the Navigation Drawer should actually have the Navigation Drawer image" and that "all other screens have the traditional up carat." </p>
+
+<p>See here for details: <a href="http://youtu.be/F5COhlbpIbY" savefrom_lm_index="0" savefrom_lm="1">http://youtu.be/F5COhlbpIbY</a><span style="padding: 0; margin: 0;">&nbsp;<a href="http://savefrom.net/?url=http%3A%2F%2Fyoutu.be%2FF5COhlbpIbY&utm_source=opera-chromium&utm_medium=extensions&utm_campaign=link_modifier" target="_blank" title="Получи прямую ссылку" savefrom_lm="1" style="border: none; text-decoration: none; padding: 0px; position: relative; z-index: 9999;"><img src="data:image/gif;base64,R0lGODlhEAAQAOZ3APf39+Xl5fT09OPj4/Hx8evr6/3+/u7u7uDh4OPi497e3t7e3/z8/P79/X3GbuXl5ubl5eHg4WzFUfb39+Pj4lzGOV7LOPz7+/n6+vn5+ZTLj9/e387Ozt7f3/7+/vv7/ISbePn5+m/JV1nRKXmVbkCnKVrSLDqsCuDh4d/e3uDn3/z7/H6TdVeaV1uSW+bn5v39/eXm5eXm5kyHP/f39pzGmVy7J3yRd9/f3mLEKkXCHJbka2TVM5vaZn6Wdfn6+YG/c/r5+ZO/jeLi41aHTIeageLn4f39/vr6+kzNG2PVM5i+lomdf2CXYKHVmtzo2YXNeDqsBebl5uHh4HDKWN3g3kKqEH6WeZHTXIPKdnSPbv79/pfmbE7PHpe1l4O8dTO5DODg4VDLIlKUUtzo2J7SmEWsLlG4NJbFjkrJHP7+/VK5Nfz8+zmnC3KKa+Hg4OHh4Y63j/3+/eDg4Ojo6P///8DAwP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAHcALAAAAAAQABAAAAfWgHd2g4SFhYJzdYqLjIpzgx5bBgYwHg1Hk2oNDXKDFwwfDF5NLmMtcStsn4MhGT8YS04aGmU1QRhIGYMTADQAQlAODlloAMYTgwICRmRfVBISIkBPKsqDBAREZmcVFhYVayUz2IMHB1dWOmImI2lgUVrmgwUFLzdtXTxKSSduMfSD6Aik48MGlx05SAykM0gKhAAPAhTB0oNFABkPHg5KMIBCxzlMQFQZMGBIggSDpsCJgGDOmzkIUCAIM2dOhEEcNijQuQDHgg4KOqRYwMGOIENIB90JBAA7" alt="SaveFrom.net" title="Получи прямую ссылку" border="0" style="border: none; width: auto; height: auto;"></a></span></p>
+
+<p>I'm using one activity to control multiple levels of fragments and can get the Navigation Drawer image to display and function at all levels.</p>
+
+<p>When creating lower level fragments I can call the ActionBarDrawerToggle setDrawerIndicatorEnabled(false) to hide the Navigation Drawer image and have the Up caret displayed </p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="pln">    </span><span class="typ">LowerLevelFragment</span><span class="pln"> lowFrag </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">LowerLevelFragment</span><span class="pun">();</span><span class="pln">
+
+        </span><span class="com">//disable the toggle menu and show up carat</span><span class="pln">
+            theDrawerToggle</span><span class="pun">.</span><span class="pln">setDrawerIndicatorEnabled</span><span class="pun">(</span><span class="kwd">false</span><span class="pun">);</span><span class="pln">
+            getSupportFragmentManager</span><span class="pun">().</span><span class="pln">beginTransaction</span><span class="pun">().</span><span class="pln">replace</span><span class="pun">(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">frag_layout</span><span class="pun">,</span><span class="pln"> 
+            lowFrag</span><span class="pun">,</span><span class="pln"> </span><span class="str">"lowerFrag"</span><span class="pun">).</span><span class="pln">addToBackStack</span><span class="pun">(</span><span class="kwd">null</span><span class="pun">).</span><span class="pln">commit</span><span class="pun">();</span></code></pre>
+
+<p>The problem I'm having is when I navigate back to the top level fragments the Up carat still shows instead of the original Navigation Drawer image. Any suggestions on how to "refresh" the ActionBar on the top level fragments to re-display the Navigation Drawer image? </p>
+
+<hr>
+
+<h2>Solution</h2>
+
+<p>Tom's suggestion worked for me.  Here’s what I did:</p>
+
+<h3>MainActivity</h3>
+
+<p>This activity controls all fragments in the app.</p>
+
+<p>When preparing new fragments to replace others, I set the DrawerToggle <b>setDrawerIndicatorEnabled(false)</b> like this:</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="typ">LowerLevelFragment</span><span class="pln"> lowFrag </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">LowerLevelFragment</span><span class="pun">();</span><span class="pln">
+
+</span><span class="com">//disable the toggle menu and show up carat</span><span class="pln">
+theDrawerToggle</span><span class="pun">.</span><span class="pln">setDrawerIndicatorEnabled</span><span class="pun">(</span><span class="kwd">false</span><span class="pun">);</span><span class="pln">
+  getSupportFragmentManager</span><span class="pun">().</span><span class="pln">beginTransaction</span><span class="pun">().</span><span class="pln">replace</span><span class="pun">(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">frag_layout</span><span class="pun">,</span><span class="pln">   
+  lowFrag</span><span class="pun">).</span><span class="pln">addToBackStack</span><span class="pun">(</span><span class="kwd">null</span><span class="pun">).</span><span class="pln">commit</span><span class="pun">();</span></code></pre>
+
+<p>Next, in an override of onBackPressed, I reverted the above by setting the DrawerToggle to <b>setDrawerIndicatorEnabled(true)</b> like this:</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="lit">@Override</span><span class="pln">
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> onBackPressed</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+</span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onBackPressed</span><span class="pun">();</span><span class="pln">
+
+</span><span class="com">//turn on the Navigation Drawer image; this is called in the LowerLevelFragments</span><span class="pln">
+setDrawerIndicatorEnabled</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">)</span><span class="pln">
+
+</span><span class="pun">}</span></code></pre>
+
+<hr>
+
+<h3>In the LowerLevelFragments</h3> 
+
+<p>In the fragments I modified <b>onCreate</b> and <b>onOptionsItemSelected</b> like this:</p>
+
+<p>In <b>onCreate</b> added <b>setHasOptionsMenu(true)</b> to enable configuring the options menu. Also set <b>setDisplayHomeAsUpEnabled(true)</b> to enable the <b>&lt;</b> in the actionbar:</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="lit">@Override</span><span class="pln">
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> onCreate</span><span class="pun">(</span><span class="typ">Bundle</span><span class="pln"> savedInstanceState</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+</span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onCreate</span><span class="pun">(</span><span class="pln">savedInstanceState</span><span class="pun">);</span><span class="pln">
+</span><span class="com">//needed to indicate that the fragment would like to add items to the Options Menu      </span><span class="pln">
+setHasOptionsMenu</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+
+</span><span class="com">//update the actionbar to show the up carat/affordance </span><span class="pln">
+getActivity</span><span class="pun">().</span><span class="pln">getActionBar</span><span class="pun">().</span><span class="pln">setDisplayHomeAsUpEnabled</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>Then in <b>onOptionsItemSelected</b> whenever the <b>&lt;</b> is pressed it calls the <b>onBackPressed()</b> from the activity to move up one level in the hierarchy and display the Navigation Drawer Image:</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="lit">@Override</span><span class="pln">
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">boolean</span><span class="pln"> onOptionsItemSelected</span><span class="pun">(</span><span class="typ">MenuItem</span><span class="pln"> item</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+</span><span class="com">// Get item selected and deal with it</span><span class="pln">
+</span><span class="kwd">switch</span><span class="pln"> </span><span class="pun">(</span><span class="pln">item</span><span class="pun">.</span><span class="pln">getItemId</span><span class="pun">())</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+</span><span class="kwd">case</span><span class="pln"> android</span><span class="pun">.</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">home</span><span class="pun">:</span><span class="pln">
+
+</span><span class="com">//called when the up affordance/carat in actionbar is pressed</span><span class="pln">
+getActivity</span><span class="pun">().</span><span class="pln">onBackPressed</span><span class="pun">();</span><span class="pln">
+</span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">…</span><span class="pln"> 
+</span><span class="pun">}</span></code></pre>
+
+    </div>
+    <div class="post-taglist">
+        <a href="http://stackoverflow.com/questions/tagged/android" class="post-tag" title="show questions tagged &#39;android&#39;" rel="tag"><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/tKsDb.png" height="16" width="18" alt="" class="sponsor-tag-img">android</a> <a href="http://stackoverflow.com/questions/tagged/android-fragments" class="post-tag" title="show questions tagged &#39;android-fragments&#39;" rel="tag">android-fragments</a> <a href="http://stackoverflow.com/questions/tagged/android-actionbar" class="post-tag" title="show questions tagged &#39;android-actionbar&#39;" rel="tag">android-actionbar</a> <a href="http://stackoverflow.com/questions/tagged/navigation-drawer" class="post-tag" title="" rel="tag">navigation-drawer</a> 
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="http://stackoverflow.com/q/17258020/2377578" title="short permalink to this question" class="short-link" id="link-post-17258020">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/17258020/edit" class="suggest-edit-post" title="revise and improve this post">edit</a></div>        
+    </td>
+    <td align="right" class="post-signature">
+
+<div class="user-info ">
+    <div class="user-action-time">
+        
+        
+        <a href="http://stackoverflow.com/posts/17258020/revisions" title="show all edits to this post">edited <span title="2013-06-30 15:07:19Z" class="relativetime">Jun 30 at 15:07</span></a>
+        
+
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        <br>
+        
+    </div>
+</div>    </td>
+    <td class="post-signature owner">
+        
+<div class="user-info ">
+    <div class="user-action-time">
+        
+        
+            asked <span title="2013-06-23 05:42:03Z" class="relativetime">Jun 23 at 5:42</span>
+        
+
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1964155/evilash"><div><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/0a36c78313c6c62d6d6422b81194fff3" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1964155/evilash">EvilAsh</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">48</span><span title="4 bronze badges"><span class="badge3"></span><span class="badgecount">4</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</div>
+</td>
+        </tr>
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-17258020" class="comments" data-localized="true">
+		    <table>
+			    <tbody data-remaining-comments-count="0" data-addlink-html="" data-addlink-disabled="true">
+
+    <tr id="comment-27242314" class="comment">
+        <td class="comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="comment-score">
+                            
+                                <span title="number of &#39;useful comment&#39; votes received" class="cool">1</span>   
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+	<span class="comment-copy">Also in your onBackPressed() method you can check how many entries are in back stack with getFragmentManager().getBackStackEntryCount() method and enable drawer indicator only if result is 0. In that case it's unnecessary to enable homeAsUpIndicator in each LowerLevelFragments.</span>
+	–&nbsp;
+		<a href="http://stackoverflow.com/users/1417307/pvshnik" title="109 reputation" class="comment-user">pvshnik</a>
+	<span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme#comment27242314_17258020"><span title="2013-08-30 03:46:41Z" class="relativetime-clean">Aug 30 at 3:46</span></a></span>
+				</div>
+
+        </td>
+    </tr>
+			    </tbody>
+		    </table>
+	    </div>
+			<a id="comments-link-17258020" class="comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid answering questions in comments."></a>
+    </td>
+</tr>            </tbody></table>    
+</div>
+
+
+			<div id="answers">
+
+				<a name="tab-top"></a>
+				<div id="answers-header">
+					<div class="subheader answers-subheader">
+						<h2>
+								4 Answers
+						</h2>
+						<div>
+							<div id="tabs">
+        <a href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme?answertab=active#tab-top" title="Answers with the latest activity first">active</a>
+        <a href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme?answertab=oldest#tab-top" title="Answers in the order they were provided">oldest</a>
+        <a class="youarehere" href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme?answertab=votes#tab-top" title="Answers with the highest score first">votes</a>
+</div>
+						</div>
+					</div>    
+				</div>    
+
+
+
+
+  
+<a name="17375568"></a>
+<div id="answer-17375568" class="answer accepted-answer" data-answerid="17375568">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="17375568">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">1</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+
+        <span class="vote-accepted-on load-accepted-answer-date" title="loading when this answer was accepted...">accepted</span>
+</div>
+
+            </td>
+
+
+
+<td class="answercell">
+    <div class="post-text"><p>You have written that, to implement lower-level fragments, you are replacing the existing fragment, as opposed to implementing the lower-level fragment in a new activity.</p>
+
+<p>I would think that you would then have to implement the back functionality manually: when the user pressed back you have code that pops the stack (e.g. in Activity::onBackPressed override).  So, where-ever you  do that, you can reverse the setDrawerIndicatorEnabled.</p>
+</div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="http://stackoverflow.com/a/17375568/2377578" title="short permalink to this answer" class="short-link" id="link-post-17375568">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/17375568/edit" class="suggest-edit-post" title="revise and improve this post">edit</a></div>                    </td>
+    <td align="right" class="post-signature">
+
+<div class="user-info ">
+    <div class="user-action-time">
+        
+        
+        <a href="http://stackoverflow.com/posts/17375568/revisions" title="show all edits to this post">edited <span title="2013-06-29 00:47:39Z" class="relativetime">Jun 29 at 0:47</span></a>
+        
+
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        <br>
+        
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        
+        
+            answered <span title="2013-06-29 00:39:26Z" class="relativetime">Jun 29 at 0:39</span>
+        
+
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/150016/tom"><div class="gravatar-wrapper-32"><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/kruqI.jpg" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/150016/tom">Tom</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">3,375</span><span title="1 gold badge"><span class="badge1"></span><span class="badgecount">1</span></span><span title="11 silver badges"><span class="badge2"></span><span class="badgecount">11</span></span><span title="25 bronze badges"><span class="badge3"></span><span class="badgecount">25</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>        </tr>
+
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-17375568" class="comments" data-localized="true">
+		    <table>
+			    <tbody data-remaining-comments-count="0" data-addlink-html="" data-addlink-disabled="true">
+
+    <tr id="comment-25249285" class="comment">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="comment-score">
+                            
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+	<span class="comment-copy">Thanks Tom, that worked! I've updated the original post with the solution I used.</span>
+	–&nbsp;
+		<a href="http://stackoverflow.com/users/1964155/evilash" title="48 reputation" class="comment-user owner">EvilAsh</a>
+	<span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme#comment25249285_17375568"><span title="2013-06-30 15:08:26Z" class="relativetime-clean">Jun 30 at 15:08</span></a></span>
+				</div>
+
+        </td>
+    </tr>
+			    </tbody>
+		    </table>
+	    </div>
+			<a id="comments-link-17375568" class="comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”."></a>
+    </td>
+</tr>
+    </tbody></table>
+</div>
+            <script type="text/javascript">
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk812971835",4).setZone(44) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow" id="adzerk812971835">
+            </div>  
+
+
+
+  
+<a name="18007838"></a>
+<div id="answer-18007838" class="answer" data-answerid="18007838">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="18007838">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">2</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+
+</div>
+
+            </td>
+
+
+
+<td class="answercell">
+    <div class="post-text"><p>Try handling the Home item selection in the MainActivity depending on the state of the DrawerToggle. This way you don't have to add same code to every fragment.</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="lit">@Override</span><span class="pln">
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">boolean</span><span class="pln"> onOptionsItemSelected</span><span class="pun">(</span><span class="typ">MenuItem</span><span class="pln"> item</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Only handle with DrawerToggle if the drawer indicator is enabled.</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">mDrawerToggle</span><span class="pun">.</span><span class="pln">isDrawerIndicatorEnabled</span><span class="pun">()</span><span class="pln"> </span><span class="pun">&amp;&amp;</span><span class="pln">
+            mDrawerToggle</span><span class="pun">.</span><span class="pln">onOptionsItemSelected</span><span class="pun">(</span><span class="pln">item</span><span class="pun">))</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="com">// Handle action buttons</span><span class="pln">
+    </span><span class="kwd">switch</span><span class="pln"> </span><span class="pun">(</span><span class="pln">item</span><span class="pun">.</span><span class="pln">getItemId</span><span class="pun">())</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Handle home button in non-drawer mode</span><span class="pln">
+        </span><span class="kwd">case</span><span class="pln"> android</span><span class="pun">.</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">home</span><span class="pun">:</span><span class="pln">
+            onBackPressed</span><span class="pun">();</span><span class="pln">
+            </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+
+        </span><span class="kwd">default</span><span class="pun">:</span><span class="pln">
+            </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onOptionsItemSelected</span><span class="pun">(</span><span class="pln">item</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+</div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="http://stackoverflow.com/a/18007838/2377578" title="short permalink to this answer" class="short-link" id="link-post-18007838">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/18007838/edit" class="suggest-edit-post" title="revise and improve this post">edit</a></div>                    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+<div class="user-info ">
+    <div class="user-action-time">
+        
+        
+            answered <span title="2013-08-02 02:33:37Z" class="relativetime">Aug 2 at 2:33</span>
+        
+
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/425932/dzeikei"><div><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/0899fac8f9bca0099193d3df82cdcaa0" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/425932/dzeikei">dzeikei</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">558</span><span title="3 silver badges"><span class="badge2"></span><span class="badgecount">3</span></span><span title="15 bronze badges"><span class="badge3"></span><span class="badgecount">15</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>        </tr>
+
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-18007838" class="comments" data-localized="true">
+		    <table>
+			    <tbody data-remaining-comments-count="0" data-addlink-html="" data-addlink-disabled="true">
+
+    <tr id="comment-28294558" class="comment">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="comment-score">
+                            
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+	<span class="comment-copy">+1 neat solution. For your answer to be fully usable you should add a check on the backstack. When it is empty then automatically set the drawer indicator to true.</span>
+	–&nbsp;
+		<a href="http://stackoverflow.com/users/972684/hpterm" title="2269 reputation" class="comment-user">HpTerm</a>
+	<span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme#comment28294558_18007838"><span title="2013-10-02 07:55:22Z" class="relativetime-clean">Oct 2 at 7:55</span></a></span>
+				</div>
+
+        </td>
+    </tr>
+    <tr id="comment-28324389" class="comment">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="comment-score">
+                            
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+	<span class="comment-copy">@HpTerm I handle the backstack in <code>onBackPressed()</code> because I wanted the same behavior for both.</span>
+	–&nbsp;
+		<a href="http://stackoverflow.com/users/425932/dzeikei" title="558 reputation" class="comment-user">dzeikei</a>
+	<span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme#comment28324389_18007838"><span title="2013-10-03 01:06:12Z" class="relativetime-clean">Oct 3 at 1:06</span></a></span>
+				</div>
+
+        </td>
+    </tr>
+    <tr id="comment-28327809" class="comment">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="comment-score">
+                            
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+	<span class="comment-copy">Oh, right, I missed that point. Thx.</span>
+	–&nbsp;
+		<a href="http://stackoverflow.com/users/972684/hpterm" title="2269 reputation" class="comment-user">HpTerm</a>
+	<span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme#comment28327809_18007838"><span title="2013-10-03 05:07:58Z" class="relativetime-clean">Oct 3 at 5:07</span></a></span>
+				</div>
+
+        </td>
+    </tr>
+			    </tbody>
+		    </table>
+	    </div>
+			<a id="comments-link-18007838" class="comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”."></a>
+    </td>
+</tr>
+    </tbody></table>
+</div>
+
+  
+<a name="19132453"></a>
+<div id="answer-19132453" class="answer" data-answerid="19132453">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="19132453">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">0</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+
+</div>
+
+            </td>
+
+
+
+<td class="answercell">
+    <div class="post-text"><p><strong>FOLLOW UP</strong></p>
+
+<p>The solution given by @dzeikei is neat, but it can be extended, when using fragments, to automatically handle setting back the drawer indicator when the backstack is empty.</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="lit">@Override</span><span class="pln">
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">boolean</span><span class="pln"> onOptionsItemSelected</span><span class="pun">(</span><span class="typ">MenuItem</span><span class="pln"> item</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Only handle with DrawerToggle if the drawer indicator is enabled.</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">mDrawerToggle</span><span class="pun">.</span><span class="pln">isDrawerIndicatorEnabled</span><span class="pun">()</span><span class="pln"> </span><span class="pun">&amp;&amp;</span><span class="pln">
+            mDrawerToggle</span><span class="pun">.</span><span class="pln">onOptionsItemSelected</span><span class="pun">(</span><span class="pln">item</span><span class="pun">))</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="com">// Handle action buttons</span><span class="pln">
+    </span><span class="kwd">switch</span><span class="pln"> </span><span class="pun">(</span><span class="pln">item</span><span class="pun">.</span><span class="pln">getItemId</span><span class="pun">())</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Handle home button in non-drawer mode</span><span class="pln">
+        </span><span class="kwd">case</span><span class="pln"> android</span><span class="pun">.</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">home</span><span class="pun">:</span><span class="pln">
+            getFragmentManager</span><span class="pun">().</span><span class="pln">popBackStack</span><span class="pun">();</span><span class="pln">
+            </span><span class="com">//make sure transactions are finished before reading backstack count</span><span class="pln">
+            getFragmentManager</span><span class="pun">().</span><span class="pln">executePendingTransactions</span><span class="pun">();</span><span class="pln">
+            </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">getFragmentManager</span><span class="pun">().</span><span class="pln">getBackStackEntryCount</span><span class="pun">()</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> </span><span class="lit">1</span><span class="pun">){</span><span class="pln">
+                mDrawerToggle</span><span class="pun">.</span><span class="pln">setDrawerIndicatorEnabled</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span><span class="pln">  
+            </span><span class="pun">}</span><span class="pln">
+            </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+
+        </span><span class="kwd">default</span><span class="pun">:</span><span class="pln">
+            </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onOptionsItemSelected</span><span class="pun">(</span><span class="pln">item</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+</div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="http://stackoverflow.com/a/19132453/2377578" title="short permalink to this answer" class="short-link" id="link-post-19132453">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/19132453/edit" class="suggest-edit-post" title="revise and improve this post">edit</a></div>                    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+<div class="user-info ">
+    <div class="user-action-time">
+        
+        
+            answered <span title="2013-10-02 08:02:14Z" class="relativetime">Oct 2 at 8:02</span>
+        
+
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/972684/hpterm"><div><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/7e3ee384e0a9399e54b2ed35c5c351fc" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/972684/hpterm">HpTerm</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">2,269</span><span title="1 gold badge"><span class="badge1"></span><span class="badgecount">1</span></span><span title="14 silver badges"><span class="badge2"></span><span class="badgecount">14</span></span><span title="39 bronze badges"><span class="badge3"></span><span class="badgecount">39</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>        </tr>
+
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-19132453" class="comments dno" data-localized="true">
+		    <table>
+			    <tbody data-remaining-comments-count="0" data-addlink-html="" data-addlink-disabled="true">
+					    <tr><td></td><td></td></tr>
+			    </tbody>
+		    </table>
+	    </div>
+			<a id="comments-link-19132453" class="comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”."></a>
+    </td>
+</tr>
+    </tbody></table>
+</div>
+
+  
+<a name="19954026"></a>
+<div id="answer-19954026" class="answer" data-answerid="19954026">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="19954026">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span class="vote-count-post ">0</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+
+</div>
+
+            </td>
+
+
+
+<td class="answercell">
+    <div class="post-text"><p>It's easy as 1-2-3.</p>
+
+<p>If you want to achieve:</p>
+
+<p>1) <strong>Drawer Indicator</strong> - when no fragments are in the Back Stack or the Drawer is opened</p>
+
+<p>2) <strong>Arrow</strong> - when some Fragments are in the Back Stack</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="lit">@Override</span><span class="pln">
+</span><span class="kwd">protected</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> onCreate</span><span class="pun">(</span><span class="typ">Bundle</span><span class="pln"> savedInstanceState</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    mDrawerToggle </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">ActionBarDrawerToggle</span><span class="pun">(</span><span class="pln">
+            </span><span class="kwd">this</span><span class="pun">,</span><span class="pln">             
+            mDrawerLayout</span><span class="pun">,</span><span class="pln">  
+            R</span><span class="pun">.</span><span class="pln">drawable</span><span class="pun">.</span><span class="pln">ic_navigation_drawer</span><span class="pun">,</span><span class="pln"> 
+            </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> 
+            </span><span class="lit">0</span><span class="pln">  
+    </span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> onDrawerClosed</span><span class="pun">(</span><span class="typ">View</span><span class="pln"> view</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            setActionBarArrowDependingOnFragmentsBackStack</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> onDrawerOpened</span><span class="pun">(</span><span class="typ">View</span><span class="pln"> drawerView</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            mDrawerToggle</span><span class="pun">.</span><span class="pln">setDrawerIndicatorEnabled</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">};</span><span class="pln">
+
+    mDrawerLayout</span><span class="pun">.</span><span class="pln">setDrawerListener</span><span class="pun">(</span><span class="pln">mDrawerToggle</span><span class="pun">);</span><span class="pln">
+    getSupportFragmentManager</span><span class="pun">().</span><span class="pln">addOnBackStackChangedListener</span><span class="pun">(</span><span class="kwd">new</span><span class="pln"> </span><span class="typ">FragmentManager</span><span class="pun">.</span><span class="typ">OnBackStackChangedListener</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="lit">@Override</span><span class="pln">
+        </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> onBackStackChanged</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            setActionBarArrowDependingOnFragmentsBackStack</span><span class="pun">();</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> setActionBarArrowDependingOnFragmentsBackStack</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">int</span><span class="pln"> backStackEntryCount </span><span class="pun">=</span><span class="pln"> getSupportFragmentManager</span><span class="pun">().</span><span class="pln">getBackStackEntryCount</span><span class="pun">();</span><span class="pln">
+    </span><span class="kwd">boolean</span><span class="pln"> shouldEnableDrawerIndicator </span><span class="pun">=</span><span class="pln"> backStackEntryCount </span><span class="pun">==</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln">
+    mDrawerToggle</span><span class="pun">.</span><span class="pln">setDrawerIndicatorEnabled</span><span class="pun">(</span><span class="pln">shouldEnableDrawerIndicator</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>3) Both indicators to act according to their shape</p>
+
+<pre class="default prettyprint prettyprinted" style=""><code><span class="lit">@Override</span><span class="pln">
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">boolean</span><span class="pln"> onOptionsItemSelected</span><span class="pun">(</span><span class="typ">MenuItem</span><span class="pln"> item</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">mDrawerToggle</span><span class="pun">.</span><span class="pln">isDrawerIndicatorEnabled</span><span class="pun">()</span><span class="pln"> </span><span class="pun">&amp;&amp;</span><span class="pln"> mDrawerToggle</span><span class="pun">.</span><span class="pln">onOptionsItemSelected</span><span class="pun">(</span><span class="pln">item</span><span class="pun">))</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">item</span><span class="pun">.</span><span class="pln">getItemId</span><span class="pun">()</span><span class="pln"> </span><span class="pun">==</span><span class="pln"> android</span><span class="pun">.</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">home </span><span class="pun">&amp;&amp;</span><span class="pln"> getSupportFragmentManager</span><span class="pun">().</span><span class="pln">popBackStackImmediate</span><span class="pun">())</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onOptionsItemSelected</span><span class="pun">(</span><span class="pln">item</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+</div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+
+
+
+
+
+
+
+
+
+
+
+<div class="post-menu"><a href="http://stackoverflow.com/a/19954026/2377578" title="short permalink to this answer" class="short-link" id="link-post-19954026">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/19954026/edit" class="suggest-edit-post" title="revise and improve this post">edit</a></div>                    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    
+<div class="user-info ">
+    <div class="user-action-time">
+        
+        
+            answered <span title="2013-11-13 12:39:18Z" class="relativetime">Nov 13 at 12:39</span>
+        
+
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/986216/riwnodennyk"><div><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/bd688213a2e01c5bd40baadae91dc0fe" alt="" width="32" height="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/986216/riwnodennyk">riwnodennyk</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">185</span><span title="8 bronze badges"><span class="badge3"></span><span class="badgecount">8</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>        </tr>
+
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-19954026" class="comments dno" data-localized="true">
+		    <table>
+			    <tbody data-remaining-comments-count="0" data-addlink-html="" data-addlink-disabled="true">
+					    <tr><td></td><td></td></tr>
+			    </tbody>
+		    </table>
+	    </div>
+			<a id="comments-link-19954026" class="comments-link disabled-link" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”."></a>
+    </td>
+</tr>
+    </tbody></table>
+</div>
+									<a name="new-answer"></a>
+						<form id="post-form" action="http://stackoverflow.com/questions/17258020/answer/submit" method="post" class="post-form">
+							<input type="hidden" id="post-id" value="17258020">
+							<h2 class="space">Your Answer</h2>
+
+
+
+    
+
+<script type="text/javascript">
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+         
+        prepareEditor({
+            heartbeatType: 'answer',
+            bindNavPrevention: true,
+            postfix: "",
+            onDemand: false,
+            discardSelector: ".discard-answer"
+            ,immediatelyShowMarkdownHelp:true
+        });
+        
+
+    });  
+</script>
+
+
+<div id="post-editor" class="post-editor">
+
+    <div style="position: relative;">     
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"><ul id="wmd-button-row" class="wmd-button-row"><li class="wmd-button" id="wmd-bold-button" title="Strong &lt;strong&gt; Ctrl+B" style="left: 0px;"><span style="background-position: 0px 0px;"></span></li><li class="wmd-button" id="wmd-italic-button" title="Emphasis &lt;em&gt; Ctrl+I" style="left: 25px;"><span style="background-position: -20px 0px;"></span></li><li class="wmd-spacer wmd-spacer1" id="wmd-spacer1"></li><li class="wmd-button" id="wmd-link-button" title="Hyperlink &lt;a&gt; Ctrl+L" style="left: 75px;"><span style="background-position: -40px 0px;"></span></li><li class="wmd-button" id="wmd-quote-button" title="Blockquote &lt;blockquote&gt; Ctrl+Q" style="left: 100px;"><span style="background-position: -60px 0px;"></span></li><li class="wmd-button" id="wmd-code-button" title="Code Sample &lt;pre&gt;&lt;code&gt; Ctrl+K" style="left: 125px;"><span style="background-position: -80px 0px;"></span></li><li class="wmd-button" id="wmd-image-button" title="Image &lt;img&gt; Ctrl+G" style="left: 150px;"><span style="background-position: -100px 0px;"></span></li><li class="wmd-spacer wmd-spacer2" id="wmd-spacer2"></li><li class="wmd-button" id="wmd-olist-button" title="Numbered List &lt;ol&gt; Ctrl+O" style="left: 200px;"><span style="background-position: -120px 0px;"></span></li><li class="wmd-button" id="wmd-ulist-button" title="Bulleted List &lt;ul&gt; Ctrl+U" style="left: 225px;"><span style="background-position: -140px 0px;"></span></li><li class="wmd-button" id="wmd-heading-button" title="Heading &lt;h1&gt;/&lt;h2&gt; Ctrl+H" style="left: 250px;"><span style="background-position: -160px 0px;"></span></li><li class="wmd-button" id="wmd-hr-button" title="Horizontal Rule &lt;hr&gt; Ctrl+R" style="left: 275px;"><span style="background-position: -180px 0px;"></span></li><li class="wmd-spacer wmd-spacer3" id="wmd-spacer3"></li><li class="wmd-button" id="wmd-undo-button" title="Undo - Ctrl+Z" style="left: 325px;"><span style="background-position: -200px -20px;"></span></li><li class="wmd-button" id="wmd-redo-button" title="Redo - Ctrl+Y" style="left: 350px;"><span style="background-position: -220px -20px;"></span></li><li class="wmd-button wmd-help-button active-help" id="wmd-help-button" title="Markdown Editing Help" style="right: 0px;"><span style="background-position: -240px 0px;"></span></li><div id="mdhelp" class="mdhelp" style="right: -8px; width: 668px; top: 25px;">
+    <ul id="mdhelp-tabs" class="mdhelp-tabs">
+        <li data-tab="mdhelp-links" data-buttons="link">Links</li>
+        <li data-tab="mdhelp-images" data-buttons="image">Images</li>
+        <li data-tab="mdhelp-styles" data-buttons="bold,italic,heading">Styling/Headers</li>
+        <li data-tab="mdhelp-lists" data-buttons="olist,ulist">Lists</li>
+        <li data-tab="mdhelp-blockquotes" data-buttons="quote">Blockquotes</li>
+        <li data-tab="mdhelp-code" data-buttons="code">Code</li>
+        <li data-tab="mdhelp-html"> HTML </li>
+        <li style="float:right"><a href="http://stackoverflow.com/editing-help" target="_blank">advanced help »</a></li>
+    </ul>
+    
+    <div class="mdhelp-tab" id="mdhelp-links">
+            <p>
+                In most cases, a plain URL will be recognized as such and automatically linked:
+            </p>
+            <pre>Visit http://area51.stackexchange.com/ regularly!
+Use angle brackets to force linking: Have you seen &lt;http://superuser.com&gt;?
+</pre>
+            <p>
+                To create fancier links, use Markdown:
+            </p>
+                <pre>Here's [a link](http://www.example.com/)! And a reference-style link to [a panda][1].
+References don't have to be [numbers][question].
+
+ [1]: http://notfound.stackexchange.com/
+ [question]: http://english.stackexchange.com/questions/11481
+</pre>
+                <p>You can add tooltips to links:</p>
+<pre>Click [here](http://diy.stackexchange.com<span class="spaces">&nbsp;</span>"this text appears when you mouse over")!
+This works with [reference links][blog] as well.
+
+ [blog]: http://blog.stackoverflow.com/<span class="spaces">&nbsp;</span>"click here for updates"
+</pre>
+    </div>
+
+    <div class="mdhelp-tab" id="mdhelp-images">
+        <p>Images are exactly like links, but they have an exclamation point in front of them:</p>
+        <pre>![a busy cat](http://sstatic.net/stackoverflow/img/error-lolcat-problemz.jpg)
+![two muppets][1]
+
+ [1]: http://i.imgur.com/I5DFV.jpg "tooltip"
+</pre>
+        <p>
+            The word in square brackets is the alt text, which gets displayed if the browser
+ can't show the image. Be sure to include meaningful alt text for screen-reading
+ software.
+        </p>
+   
+    </div>
+    <div class="mdhelp-tab" id="mdhelp-styles">
+        <div class="col1">
+            <p>Be sure to use text styling sparingly; only where it helps readability.</p>
+                <pre>*This is italicized*, and so
+is _this_.
+
+**This is bold**, just like __this__.
+
+You can ***combine*** them
+if you ___really have to___.
+</pre>
+        
+        </div>
+        <div class="col2">
+            <p>
+                To break your text into sections, you can use headers:
+            </p>
+                <pre>A Large Header
+==============
+
+Smaller Subheader
+-----------------
+</pre>
+            <p>
+                Use hash marks if you need several levels of headers:</p>
+    <pre># Header 1 #
+## Header 2 ##
+### Header 3 ###
+</pre>
+
+            
+        </div>
+
+    </div>
+    <div class="mdhelp-tab" id="mdhelp-lists">
+        <p>Both bulleted and numbered lists are possible:</p>
+        <div class="col1">
+<pre>-<span class="spaces">&nbsp;</span>Use a minus sign for a bullet
++<span class="spaces">&nbsp;</span>Or plus sign
+*<span class="spaces">&nbsp;</span>Or an asterisk
+
+1.<span class="spaces">&nbsp;</span>Numbered lists are easy
+2.<span class="spaces">&nbsp;</span>Markdown keeps track of
+ the numbers for you
+7.<span class="spaces">&nbsp;</span>So this will be item 3.
+</pre>
+        </div>
+        <div class="col2">
+<pre>1.<span class="spaces">&nbsp;</span>Lists in a list item:
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="spaces">&nbsp;</span>Indented four spaces.
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>*<span class="spaces">&nbsp;</span>indented eight spaces.
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span class="spaces">&nbsp;</span>Four spaces again.
+2.<span class="spaces">&nbsp;&nbsp;</span>You can have multiple
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>paragraphs in a list items.
+<span class="spaces">&nbsp;</span>
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>Just be sure to indent.
+</pre>        
+        </div>
+    </div>
+
+    <div class="mdhelp-tab" id="mdhelp-blockquotes">
+        <div class="col1">
+            <pre>&gt; Create a blockquote by
+&gt; prepending “&gt;” to each line.
+&gt;
+&gt; Other formatting also works here, e.g.
+&gt;
+&gt; 1. Lists or
+&gt; 2. Headings:
+&gt;
+&gt; ## Quoted Heading ##
+</pre>
+        </div>
+        <div class="col2">
+                <p>
+                    You can even put blockquotes in blockquotes:
+                </p>
+                <pre>&gt; A standard blockquote is indented
+&gt; &gt; A nested blockquote is indented more
+&gt; &gt; &gt; &gt; You can nest to any depth.
+</pre>
+        </div>
+    </div>
+
+    <div class="mdhelp-tab" id="mdhelp-code">
+        <p>
+            To create code blocks or other preformatted text, indent by four spaces:
+        </p>
+        <pre><span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>This will be displayed in a monospaced font. The first four spaces
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>will be stripped off, but all other whitespace will be preserved.
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>Markdown and HTML are turned off in code blocks:
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>&lt;i&gt;This is not italic&lt;/i&gt;, and [this is not a link](http://example.com)
+</pre>
+        <p>
+            To create not a block, but an inline code span, use backticks:
+        </p>
+        <pre>The `$` character is just a shortcut for `window.jQuery`.
+</pre>
+        <p>
+            If you want to have a preformatted block within a list, indent by eight spaces:
+        </p>
+        <pre>1. This is normal text.
+2. So is this, but now follows a code block:
+<span class="spaces">&nbsp;</span>
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>Skip a line and indent eight spaces.
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>That's four spaces for the list
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>and four to trigger the code block.
+</pre>
+    </div>
+
+    <div class="mdhelp-tab" id="mdhelp-html">
+        <p>
+            If you need to do something that Markdown can't handle, use HTML. Note that <a href="http://meta.stackoverflow.com/questions/1777/what-html-tags-are-allowed" target="_blank">we only support a very strict subset of HTML!</a>
+        </p>
+        <pre>Strikethrough humor is &lt;strike&gt;funny&lt;/strike&gt;.
+</pre>
+        <p>
+            Markdown is smart enough not to mangle your span-level HTML:
+        </p>
+        <pre>&lt;b&gt;Markdown works *fine* in here.&lt;/b&gt;
+</pre>
+        <p>
+            Block-level HTML elements have a few restrictions:
+        </p>
+        <ol>
+            <li>They must be separated from surrounding text by blank lines.</li>
+            <li>The begin and end tags of the outermost block element must not be indented.</li>
+            <li>Markdown can't be used within HTML blocks.</li>
+        </ol>
+        <br>
+        <pre>&lt;pre&gt;
+ You can &lt;em&gt;not&lt;/em&gt; use Markdown in here.
+&lt;/pre&gt;
+</pre>
+    </div>
+
+    <div class="cbt"></div>
+</div></ul></div>
+            <div style="clear: both; height: 24px;"></div><textarea id="wmd-input" class="wmd-input processed" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        <div class="grippie" style="margin-right: 0px;"></div></div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" type="hidden" value="82d96d8473788330fb1b3b365d789a24">
+        <input id="author" name="author" type="text">
+    </div>
+</div>
+							<div style="position: relative;">
+								
+							</div>
+           
+															<div class="form-submit cbt">
+									<input id="submit-button" type="submit" value="Post Your Answer" tabindex="110">
+									<a href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme#" class="discard-answer dno">discard</a>
+								</div>
+						</form>
+
+
+
+						<h2 class="bottom-notice">
+Not the answer you're looking for?							Browse other questions tagged <a href="http://stackoverflow.com/questions/tagged/android" class="post-tag" title="show questions tagged &#39;android&#39;" rel="tag"><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/tKsDb.png" height="16" width="18" alt="" class="sponsor-tag-img">android</a> <a href="http://stackoverflow.com/questions/tagged/android-fragments" class="post-tag" title="show questions tagged &#39;android-fragments&#39;" rel="tag">android-fragments</a> <a href="http://stackoverflow.com/questions/tagged/android-actionbar" class="post-tag" title="show questions tagged &#39;android-actionbar&#39;" rel="tag">android-actionbar</a> <a href="http://stackoverflow.com/questions/tagged/navigation-drawer" class="post-tag" title="show questions tagged &#39;navigation-drawer&#39;" rel="tag">navigation-drawer</a>  or <a href="http://stackoverflow.com/questions/ask">ask your own question</a>.						</h2>
+			</div>
+		</div>
+				<div id="sidebar" class="show-votes">
+
+
+
+<script type="text/javascript">
+    window.showNewUser = false;
+
+</script>
+
+<div class="module newuser newuser-greeting" id="newuser-box" style="display:none;">
+    <h4>Hello World!</h4>
+    <div>
+        <p>This is a collaboratively edited question and answer site for <b>professional and enthusiast programmers</b>. It's 100% free, no registration required.</p>
+        <p class="ar">
+                <a href="http://stackoverflow.com/about?mnu=1">about »</a>&nbsp;&nbsp;&nbsp;
+            <a href="http://stackoverflow.com/help?mnu=1">help »</a>
+        </p>
+    </div>
+</div>
+    <script type="text/javascript">
+    if (showNewUser) {
+        document.getElementById('newuser-box').style.display = '';
+    }
+    </script>							<div class="module question-stats">
+					<p class="label-key">tagged</p>
+					<div class="tagged"><a href="http://stackoverflow.com/questions/tagged/android" class="post-tag" title="show questions tagged &#39;android&#39;" rel="tag"><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/tKsDb.png" height="16" width="18" alt="" class="sponsor-tag-img">android</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">413970</span></span><br>
+<a href="http://stackoverflow.com/questions/tagged/android-fragments" class="post-tag" title="show questions tagged &#39;android-fragments&#39;" rel="tag">android-fragments</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">6319</span></span><br>
+<a href="http://stackoverflow.com/questions/tagged/android-actionbar" class="post-tag" title="show questions tagged &#39;android-actionbar&#39;" rel="tag">android-actionbar</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">3151</span></span><br>
+<a href="http://stackoverflow.com/questions/tagged/navigation-drawer" class="post-tag" title="show questions tagged &#39;navigation-drawer&#39;" rel="tag">navigation-drawer</a>&nbsp;<span class="item-multiplier"><span class="item-multiplier-x">×</span>&nbsp;<span class="item-multiplier-count">277</span></span><br>
+</div>
+					<table id="qinfo">
+						<tbody><tr>
+							<td>
+								<p class="label-key">asked</p>
+							</td>
+							<td style="padding-left: 10px">
+								<p class="label-key" title="2013-06-23 05:42:03Z"><b>4 months ago</b></p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p class="label-key">viewed</p>
+							</td>
+
+							<td style="padding-left: 10px">
+								<p class="label-key">
+									<b>2348 times</b>
+								</p>
+							</td>
+						</tr>
+							<tr>
+								<td>
+									<p class="label-key">active</p>
+								</td>
+								<td style="padding-left: 10px">
+									<p class="label-key"><b><a href="http://stackoverflow.com/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme?lastactivity" class="lastactivity-link" title="2013-11-13 12:39:18Z">6 days ago</a></b></p>
+								</td>
+							</tr>
+					</tbody></table>
+				</div>
+						
+			            <script type="text/javascript">
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk159390464",17).setZone(45) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow" id="adzerk159390464">
+            </div>  
+    <div id="hireme"> <a href="http://careers.stackoverflow.com/jobs?a=144" class="top" target="_blank"></a> <ul class="jobs"> <li> <a href="http://careers.stackoverflow.com/jobs/36270/javascript-mobile-developer-50-80k-dependant-wonga-com?a=IezamQO4" target="_blank" title="Javascript/Mobile Developer (50-80k dependant upon experience) at Wonga.com. Click to learn more."> Javascript/Mobile Developer (50-80k dependant upon…<br> <span class="company">Wonga.com</span> <span class="location">London, United Kingdom /…</span> </a> </li> <li> <a href="http://careers.stackoverflow.com/jobs/41180/ops-engineer-labs-contractor-wikimedia-foundation?a=OdPYIaeQ" target="_blank" title="Ops Engineer | Labs Contractor at Wikimedia Foundation. Click to learn more."> Ops Engineer | Labs Contractor<br> <span class="company">Wikimedia Foundation</span> <span class="location">Remote, OR / remote</span> </a> </li> <li> <a href="http://careers.stackoverflow.com/jobs/43506/software-development-engineer-kindle-b2b-amazon?a=R3IC4cQU" target="_blank" title="Software Development Engineer - Kindle B2B Platform at Amazon. Click to learn more."> Software Development Engineer - Kindle B2B Platform<br> <span class="company">Amazon</span> <span class="location">Seattle, WA / relocation</span> </a> </li> </ul> <img alt="" class="impression" src="http://careers.stackoverflow.com/ad/i/IezamQO4-OdPYIaeQ-R3IC4cQU-144" style="display: none !important; visibility: hidden !important; opacity: 0 !important; background-position: 0px 0px;" width="0" height="0"></div>
+
+
+
+			  
+    
+            <div class="module sidebar-linked">
+	<h4 id="h-linked">Linked</h4>
+	<div class="linked" data-tracker="lq=1">
+<div class="spacer">
+	<a href="http://stackoverflow.com/q/19439320?lq=1" title="Vote score (upvotes - downvotes)">
+		<div class="answer-votes  default">0</div>
+	</a>
+	<a href="http://stackoverflow.com/questions/19439320/disabling-navigation-drawer-in-fragments?lq=1" class="question-hyperlink">Disabling navigation drawer in fragments</a>
+</div>			</div>
+</div>
+
+
+				<div class="module sidebar-related">
+					<h4 id="h-related">Related</h4>
+					<div class="related" data-tracker="rq=1">
+						<div class="spacer">
+<a href="http://stackoverflow.com/q/11377472?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted large">263
+    </div>
+</a><a href="http://stackoverflow.com/questions/11377472/navigation-drawer-google-vs-youtube?rq=1" class="question-hyperlink">Navigation Drawer (Google+ vs. YouTube)</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/15309735?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/15309735/navigating-with-sherlockactionbar-in-fragments-doesnt-work?rq=1" class="question-hyperlink">Navigating with sherlockactionbar in fragments doesnt work</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/17211690?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/17211690/android-drawer-menu-swipeview?rq=1" class="question-hyperlink">Android: Drawer menu + swipeView</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/17389153?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">4
+    </div>
+</a><a href="http://stackoverflow.com/questions/17389153/is-this-a-correct-use-of-android-fragments-and-navigationdrawer?rq=1" class="question-hyperlink">Is this a correct use of Android Fragments and NavigationDrawer?</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/17931399?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/17931399/navigation-drawer-overlaps-over-actionbar-navigation-tabs-content?rq=1" class="question-hyperlink">Navigation Drawer overlaps over ActionBar Navigation Tabs Content</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/18354901?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">4
+    </div>
+</a><a href="http://stackoverflow.com/questions/18354901/mimicking-the-navigation-drawer-of-youtube-gmail-app?rq=1" class="question-hyperlink">mimicking the navigation drawer of youtube/gmail app</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/18727249?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">2
+    </div>
+</a><a href="http://stackoverflow.com/questions/18727249/navigation-drawer-with-nested-fragments-viewpager?rq=1" class="question-hyperlink">Navigation Drawer with nested fragments (ViewPager)</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/18766694?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/18766694/android-navigation-drawer-baseactivity?rq=1" class="question-hyperlink">Android Navigation Drawer BaseActivity</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/18894348?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/18894348/navigation-drawer-and-fragment-back-stack-handler?rq=1" class="question-hyperlink">navigation drawer and fragment back stack handler</a>
+</div>
+<div class="spacer">
+<a href="http://stackoverflow.com/q/19478210?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/19478210/custom-fragment-layout-viewpager-implementation-with-image-adapter-in-navigation?rq=1" class="question-hyperlink">Custom Fragment layout Viewpager implementation with Image Adapter in Navigation Drawer?</a>
+</div>
+
+					</div>
+				</div>
+		</div>
+	
+<div id="feed-link">
+    <div id="feed-link-text"><a href="http://stackoverflow.com/feeds/question/17258020" title="feed of this question and its answers"><span class="feed-icon"></span>question feed</a></div>
+</div>
+	<script type="text/javascript">
+StackExchange.ready(function(){$.get('/posts/17258020/ivc/ef6d');});
+</script>
+<noscript>
+    &lt;div&gt;&lt;img src="/posts/17258020/ivc/ef6d" class="dno" alt="" width="0" height="0"&gt;&lt;/div&gt;
+</noscript><div style="display:none" id="prettify-lang">default</div></div>
+
+
+        </div>
+    </div>
+    <div id="footer" class="categories">
+        <div class="footerwrap">
+            <div id="footer-menu">
+                <div class="top-footer-links">
+                        <a href="http://stackoverflow.com/about">about</a>
+                    <a href="http://stackoverflow.com/help">help</a>
+                    <a href="http://blog.stackexchange.com/?blb=1">blog</a>
+                        <a href="http://chat.stackoverflow.com/">chat</a>
+                    <a href="http://data.stackexchange.com/">data</a>
+                    <a href="http://stackexchange.com/legal">legal</a>
+                    <a href="http://stackexchange.com/legal/privacy-policy">privacy policy</a>
+                    <a href="http://stackexchange.com/about/hiring">jobs</a>
+                    <a href="http://engine.adzerk.net/r?e=eyJhdiI6NDE0LCJhdCI6MjAsImNtIjo5NTQsImNoIjoxMTc4LCJjciI6Mjc3NiwiZG0iOjQsImZjIjoyODYyLCJmbCI6Mjc1MSwibnciOjIyLCJydiI6MCwicHIiOjExNSwic3QiOjAsInVyIjoiaHR0cDovL3N0YWNrb3ZlcmZsb3cuY29tL2Fib3V0L2NvbnRhY3QiLCJyZSI6MX0&s=hRods5B22XvRBwWIwtIMekcyNF8">advertising info</a>
+
+                    <a onclick="StackExchange.switchMobile(&quot;on&quot;, &quot;/questions/17258020/switching-between-android-navigation-drawer-image-and-up-carat-when-using-fragme&quot;)">mobile</a>
+                    <b><a href="http://stackoverflow.com/contact">contact us</a></b>
+                        <b><a href="http://meta.stackoverflow.com/">feedback</a></b>
+                    
+                </div>
+                <div id="footer-sites">
+                    <table>
+    <tbody><tr>
+            <th colspan="3">
+                Technology
+            </th>
+            <th>
+                Life / Arts
+            </th>
+            <th>
+                Culture / Recreation
+            </th>
+            <th>
+                Science
+            </th>
+            <th>
+                Other
+            </th>
+    </tr>
+    <tr>
+            <td>
+                <ol>
+                        <li><a href="http://stackoverflow.com/" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                        <li><a href="http://serverfault.com/" title="professional system and network administrators">Server Fault</a></li>
+                        <li><a href="http://superuser.com/" title="computer enthusiasts and power users">Super User</a></li>
+                        <li><a href="http://webapps.stackexchange.com/" title="power users of web applications">Web Applications</a></li>
+                        <li><a href="http://askubuntu.com/" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                        <li><a href="http://webmasters.stackexchange.com/" title="pro webmasters">Webmasters</a></li>
+                        <li><a href="http://gamedev.stackexchange.com/" title="professional and independent game developers">Game Development</a></li>
+                        <li><a href="http://tex.stackexchange.com/" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://programmers.stackexchange.com/" title="professional programmers interested in conceptual questions about software development">Programmers</a></li>
+                        <li><a href="http://unix.stackexchange.com/" title="users of Linux, FreeBSD and other Un*x-like operating systems.">Unix &amp; Linux</a></li>
+                        <li><a href="http://apple.stackexchange.com/" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                        <li><a href="http://wordpress.stackexchange.com/" title="WordPress developers and administrators">WordPress Answers</a></li>
+                        <li><a href="http://gis.stackexchange.com/" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                        <li><a href="http://electronics.stackexchange.com/" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                        <li><a href="http://android.stackexchange.com/" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                        <li><a href="http://security.stackexchange.com/" title="Information security professionals">Information Security</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://dba.stackexchange.com/" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                        <li><a href="http://drupal.stackexchange.com/" title="Drupal developers and administrators">Drupal Answers</a></li>
+                        <li><a href="http://sharepoint.stackexchange.com/" title="SharePoint enthusiasts">SharePoint</a></li>
+                        <li><a href="http://ux.stackexchange.com/" title="user experience researchers and experts">User Experience</a></li>
+                        <li><a href="http://mathematica.stackexchange.com/" title="users of Mathematica">Mathematica</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#technology" class="more">
+                                more (14)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://photo.stackexchange.com/" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                        <li><a href="http://scifi.stackexchange.com/" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                        <li><a href="http://cooking.stackexchange.com/" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                        <li><a href="http://diy.stackexchange.com/" title="contractors and serious DIYers">Home Improvement</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#lifearts" class="more">
+                                more (13)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://english.stackexchange.com/" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                        <li><a href="http://skeptics.stackexchange.com/" title="scientific skepticism">Skeptics</a></li>
+                        <li><a href="http://judaism.stackexchange.com/" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                        <li><a href="http://travel.stackexchange.com/" title="road warriors and seasoned travelers">Travel</a></li>
+                        <li><a href="http://christianity.stackexchange.com/" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                        <li><a href="http://gaming.stackexchange.com/" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                        <li><a href="http://bicycles.stackexchange.com/" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                        <li><a href="http://rpg.stackexchange.com/" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#culturerecreation" class="more">
+                                more (21)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://math.stackexchange.com/" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                        <li><a href="http://stats.stackexchange.com/" title="statisticians, data analysts, data miners and data visualization experts">Cross Validated (stats)</a></li>
+                        <li><a href="http://cstheory.stackexchange.com/" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                        <li><a href="http://physics.stackexchange.com/" title="active researchers, academics and students of physics">Physics</a></li>
+                        <li><a href="http://mathoverflow.net/" title="professional mathematicians">MathOverflow</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#science" class="more">
+                                more (7)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://stackapps.com/" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                        <li><a href="http://meta.stackoverflow.com/" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Overflow</a></li>
+                        <li><a href="http://area51.stackexchange.com/" title="proposing new sites in the Stack Exchange network">Area 51</a></li>
+                        <li><a href="http://careers.stackoverflow.com/">Stack Overflow Careers</a></li>
+                    
+                </ol>
+            </td>
+    </tr>
+</tbody></table>
+                </div>
+            </div>
+
+            <div id="copyright">
+                site design / logo © 2013 stack exchange inc; user contributions licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license">cc-wiki</a> 
+ with <a href="http://blog.stackoverflow.com/2009/06/attribution-required/" rel="license">attribution required</a>
+            </div>
+            <div id="footer-flair">
+                <a href="http://creativecommons.org/licenses/by-sa/3.0/" class="cc-wiki-link"></a>
+            </div>
+            <div id="svnrev">
+                rev 2013.11.19.1161
+            </div>
+            
+        </div>
+    </div>
+    <noscript>
+        &lt;div id="noscript-warning"&gt;Stack Overflow works best with JavaScript enabled&lt;img src="http://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno"&gt;&lt;/div&gt;
+    </noscript>
+<script type="text/javascript">var p = "http", d = "static"; if (document.location.protocol == "https:") { p += "s"; d = "engine"; } var z = document.createElement("script"); z.type = "text/javascript"; z.async = true; z.src = p + "://" + d + ".adzerk.net/ados.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(z, s);</script>
+<script type="text/javascript">
+    var ados = ados || {};
+    ados.run = ados.run || [];
+    ados.run.push(function () { ados_setKeywords('android,android-fragments,android-actionbar,navigation-drawer,x-user-registered');; ados_load(); });         
+</script>
+
+    <script type="text/javascript">var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-5620270-1']);
+        _gaq.push(['_setCustomVar', 1, 'tags', '|android|android-fragments|android-actionbar|navigation-drawer|']); 
+        _gaq.push(['_setCustomVar', 2, 'accountid', '2760597',2]); 
+_gaq.push(['_trackPageview']);
+    var _qevents = _qevents || [];
+    var _comscore = _comscore || [];
+    (function () {
+        var ssl='https:'==document.location.protocol,
+            s=document.getElementsByTagName('script')[0],
+            ga=document.createElement('script');
+        ga.type='text/javascript';
+        ga.async=true;
+        ga.src=(ssl?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(ga,s);
+        var sc=document.createElement('script');
+        sc.type='text/javascript';
+        sc.async=true;
+        sc.src=(ssl?'https://secure':'http://edge')+'.quantserve.com/quant.js';
+        s.parentNode.insertBefore(sc, s);
+        
+        var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+        s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+        el.parentNode.insertBefore(s, el);
+        
+    })();
+    _comscore.push({ c1: "2", c2: "17440561" });
+    _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+    </script>        
+    
+
+<script type="text/javascript">function googleTranslateElementInit() {
+  var elem = new google.translate.TranslateElement({
+    pageLanguage: "en", 
+    layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
+    autoDisplay: false,
+    floatPosition: 0
+  });
+  elem.onTurnOffLanguageClick = function() {
+    var event = document.createEvent("Event");
+    event.initEvent("translateExt_disable_lang", true, true);
+    document.body.dispatchEvent(event);
+  };
+  var style = document.createElement("style");
+  style.appendChild( document.createTextNode( ".global_header { top: 40px !important; }" ) );
+  document.getElementsByTagName( "head" )[ 0 ].appendChild( style );
+  elem.showBanner(false);
+}</script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/translate-32.png" width="20" height="20"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">Исходный текст</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">Предложить лучший вариант перевода</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div><script type="text/javascript" src="./Switching between Android Navigation Drawer Image and Up Carat when using fragments - Stack Overflow_files/element.js"></script><iframe frameborder="0" class="goog-te-menu-frame skiptranslate" style="visibility: visible; box-sizing: content-box; width: 730px; height: 274px; display: none;"></iframe><iframe frameborder="0" class="goog-te-menu-frame skiptranslate" style="visibility: visible; box-sizing: content-box; width: 234px; height: 108px; display: none;"></iframe></body></html>

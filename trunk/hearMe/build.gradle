@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.donearh.hearme"
+        minSdkVersion 23
+        targetSdkVersion 29
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+repositories {
+    mavenCentral() // jcenter() works as well because it pulls from Maven Central
+}
+
+dependencies {
+    implementation files('libs/apache-mime4j-0.6.jar')
+    implementation files('libs/listviewanimations_lib-core-slh_3.1.0.jar')
+    implementation files('libs/listviewanimations_lib-core_3.1.0.jar')
+    implementation files('libs/listviewanimations_lib-manipulation_3.1.0.jar')
+    implementation project(':dynamicgrid')
+    implementation files('libs/httpclient-4.1.jar')
+    implementation files('libs/httpcore-4.1.jar')
+    implementation files('libs/httpmime-4.1-beta1.jar')
+    implementation 'com.google.code.gson:gson:2.2.2'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.google.android.gms:play-services-auth:9.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+}

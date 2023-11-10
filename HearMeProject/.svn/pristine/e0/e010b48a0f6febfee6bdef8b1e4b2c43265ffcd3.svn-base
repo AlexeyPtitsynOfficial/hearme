@@ -1,0 +1,7 @@
+package com.donearh.hearme.datatypes;
+
+public class AreaData {
+	
+	public Integer id;
+	public String name;
+}

@@ -1,0 +1,9 @@
+package com.donearh.hearme;
+
+public class CategoryData {
+
+	public Integer Id;
+	public String Name;
+	public Integer ParentId;
+	public String image_url;
+}

@@ -1,0 +1,211 @@
+package com.donearh.hearme;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.donearh.hearme.library.DatabaseHandler;
+import com.donearh.hearme.library.JSONParser.GetJSONListener;
+import com.donearh.hearme.library.UserFunctions.UserLoginListener;
+import com.donearh.hearme.library.UserFunctions;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+
+public class RegisterActivity extends ActionBarActivity implements OnClickListener,
+																	UserLoginListener
+{
+	
+	private Context mContext;
+	
+	private Long mUserUid;
+	
+	private String mLogin;
+	private String mEncodeFullName;
+	private String mEncodePass;
+	
+	private InsertData mInsertData;
+	private SavedData mSavedData;
+	
+	private EditText mLoginEdit;
+	private EditText mPassEdit;
+	private EditText mPassConfEdit;
+	private EditText mEmailEdit;
+	private EditText mFullNameEdit;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_register);
+		// Show the Up button in the action bar.
+		setupActionBar();
+		
+		mSavedData = new SavedData(RegisterActivity.this);
+		
+		mLoginEdit = (EditText)findViewById(R.id.edit_login);
+		mPassEdit = (EditText)findViewById(R.id.edit_pass);
+		mPassConfEdit = (EditText)findViewById(R.id.edit_pass_conf);
+		mEmailEdit = (EditText)findViewById(R.id.edit_email);
+		mFullNameEdit = (EditText)findViewById(R.id.edit_full_name);
+		
+		Button tRegBtn = (Button)findViewById(R.id.confirm_reg);
+		tRegBtn.setOnClickListener(this);
+		
+	}
+	
+	public void finishRegister()
+	{
+		/*DownloadFragment fragment = new DownloadFragment(getString(R.string.server_address) + "check_user.php"
+				+ "?login=" + mEncodeLogin
+				+ "&pass=" + mEncodePass,
+				getString(R.string.enter), 
+				DownloadFragment.REG_CHECK_USER, 
+				RegisterActivity.this);
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();*/
+	}
+	
+	public void saveNewUserData(Long uid)
+	{
+		mSavedData.saveNewUserData(uid, mLogin, mEncodePass);
+		setResult(RESULT_OK);
+		finish();
+	}
+	
+	public void errorRegister()
+	{
+		ErrorFragment fragment = new ErrorFragment(getString(R.string.login_error));
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+	}
+	/**
+	 * Set up the {@link android.app.ActionBar}, if the API is available.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void setupActionBar() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.register, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		String login = mLoginEdit.getText().toString();
+		String tPass = mPassEdit.getText().toString();
+		String tPassConf = mPassConfEdit.getText().toString();
+		String email = mEmailEdit.getText().toString();
+		String full_name = mFullNameEdit.getText().toString();
+		
+		
+		if(tPass.equals(tPassConf))
+		{
+			try {
+				full_name = URLEncoder.encode(full_name,"UTF-8");
+			   } catch (UnsupportedEncodingException e) {
+			       e.printStackTrace();
+			   } 			
+			
+			InputMethodManager imm = (InputMethodManager)getSystemService(
+				      Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(mLoginEdit.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(mPassEdit.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(mPassConfEdit.getWindowToken(), 0);
+			
+				UserFunctions fragment = new UserFunctions();
+				fragment.setListener(this);
+				Bundle args = new Bundle();
+				args.putString("circle_text", getString(R.string.register));
+				fragment.setArguments(args);
+				fragment.registerUser(login, 
+						email, 
+						tPass, 
+						full_name, 
+						"");
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+		}
+		
+	}
+
+	@Override
+	public void getUserStateComplete(JSONObject obj) {
+		// TODO Auto-generated method stub
+		UserFunctions userFunctions = new UserFunctions();
+		try
+		{
+			if(obj.getString(LoginKeys.KEY_SUCCESS) != null)
+			{
+				String res = obj.getString(LoginKeys.KEY_SUCCESS);
+				if(Integer.parseInt(res) == 1)
+				{
+					DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+					JSONObject json_user = obj.getJSONObject("user");
+					
+					userFunctions.logoutUser(getApplicationContext());
+					db.addUser(json_user.getString(LoginKeys.KEY_UID), 
+							json_user.getString(LoginKeys.KEY_LOGIN), 
+							json_user.getString(LoginKeys.KEY_EMAIL), 
+							json_user.getString(LoginKeys.KEY_FULL_NAME), 
+							"", 
+							json_user.getString(LoginKeys.KEY_CREATE_DATE));
+					
+					
+					//Intent MainActivity = new Intent(getApplicationContext(), MainControlBarActivity.class);
+                    // Close all views before launching Dashboard
+					//MainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					setResult(RESULT_OK);
+					finish();
+				}
+			}
+		}
+		catch(JSONException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+}

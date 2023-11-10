@@ -1,0 +1,77 @@
+package com.donearh.hearme;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
+import android.widget.RelativeLayout;
+
+public class StartAppFragment extends Fragment implements AnimationListener{
+
+	RelativeLayout mMainLayout;
+	
+	private Animation animScale;
+	private View mCircle;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		
+		View rootView = inflater.inflate(R.layout.start_app_fragment, container, false);
+		
+		mMainLayout = (RelativeLayout)rootView.findViewById(R.id.main_layout);
+		
+		//Anim
+		animScale = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_start_anim);
+		animScale.setAnimationListener(this);
+		mCircle = (View)rootView.findViewById(R.id.load_circle);
+		mCircle.startAnimation(animScale);
+		
+		return rootView;
+	}
+	
+	public void startClose()
+	{
+		Animation a1 = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out);
+		a1.setAnimationListener(this);
+		mMainLayout.startAnimation(a1);
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+		if(animation == animScale)
+		{
+			Animation a = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_anim);
+			mCircle.startAnimation(a);
+		}
+		else
+		{
+			getActivity().getSupportFragmentManager().beginTransaction().remove(StartAppFragment.this).commit();
+		}
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

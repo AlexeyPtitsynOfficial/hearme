@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1">
+	<title>Image swiper</title>
+
+	<link rel="stylesheet" href="css/idangerous.swiper.css">
+	<link rel="stylesheet" href="css/idangerous.swiper.3dflow.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/appstore.css">
+</head>
+<body>
+	<div class="swiper-container featured">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide" style="background-image:url(img/big/1.jpg)">
+				<a href="http://www.idangero.us" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/2.jpg)">
+				<a href="http://www.idangero.us/sliders/moover/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/3.jpg)">
+				<a href="http://www.idangero.us/index.php?content=cat_item&id=62" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/4.jpg)">
+				<a href="http://www.idangero.us/sliders/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/5.jpg)">
+				<a href="http://www.idangero.us/sliders/swiper/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/6.jpg)">
+				<a href="http://www.idangero.us/sliders/s6/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/7.jpg)">
+				<a href="http://www.idangero.us/cs/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/1.jpg)">
+				<a href="http://www.idangero.us" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/2.jpg)">
+				<a href="http://www.idangero.us/sliders/moover/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/3.jpg)">
+				<a href="http://www.idangero.us/index.php?content=cat_item&id=62" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/4.jpg)">
+				<a href="http://www.idangero.us/sliders/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/5.jpg)">
+				<a href="http://www.idangero.us/sliders/swiper/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/6.jpg)">
+				<a href="http://www.idangero.us/sliders/s6/" target="_blank"></a>
+			</div>
+			<div class="swiper-slide" style="background-image:url(img/big/7.jpg)">
+				<a href="http://www.idangero.us/cs/" target="_blank"></a>
+			</div>
+		</div>
+	</div>
+	<script src="js/jquery.min.js"></script>
+	<!-- Don't forget to get the latest Swiper and scrollbar version here-->
+	<script src="js/idangerous.swiper-2.0.min.js"></script>
+	<script src="js/idangerous.swiper.3dflow.js"></script>
+	<script src="js/appstore.js"></script>
+</body>
+</html>

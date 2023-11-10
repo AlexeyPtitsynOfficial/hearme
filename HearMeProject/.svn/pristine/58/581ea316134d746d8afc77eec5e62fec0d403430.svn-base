@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+	xmlns:compat="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    
+    <item android:id="@+id/main_search"
+          android:icon="@drawable/icon_ad_search"
+          android:title="@string/search"
+          compat:showAsAction="collapseActionView|ifRoom" 
+          android:actionViewClass="android.support.v7.widget.SearchView"/>
+
+</menu>

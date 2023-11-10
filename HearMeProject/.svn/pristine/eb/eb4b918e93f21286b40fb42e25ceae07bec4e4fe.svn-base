@@ -1,0 +1,142 @@
+package com.donearh.hearme;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+
+public class LoginActivity extends ActionBarActivity {
+
+	private SavedData mSavedData;
+	private Integer mUserUid;
+	private String mEncodeLogin;
+	private String mEncodePass;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+		// Show the Up button in the action bar.
+		setupActionBar();
+		mSavedData = new SavedData(LoginActivity.this);
+		
+		final EditText tLoginEdit = (EditText)findViewById(R.id.login_edit);
+		final EditText tPassEdit = (EditText)findViewById(R.id.pass_edit);
+		
+		Button tJoinButton = (Button)findViewById(R.id.join_btn);
+		tJoinButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v) 
+			{
+				InputMethodManager imm = (InputMethodManager)getSystemService(
+					      Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(tLoginEdit.getWindowToken(), 0);
+					imm.hideSoftInputFromWindow(tPassEdit.getWindowToken(), 0);
+				// TODO Auto-generated method stub
+				if(tLoginEdit.getText().toString() != "" && 
+						tPassEdit.getText().toString() != ""
+						)
+				{					
+					try {
+						mEncodeLogin = tLoginEdit.getText().toString();
+						mEncodePass = tPassEdit.getText().toString();
+						mEncodeLogin = URLEncoder.encode(tLoginEdit.getText().toString(),"UTF-8");
+						mEncodePass = URLEncoder.encode(tPassEdit.getText().toString(),"UTF-8");
+			     		
+					   } catch (UnsupportedEncodingException e) {
+					       e.printStackTrace();
+					   } 
+					DownloadFragment fragment = new DownloadFragment(getString(R.string.server_address) + "check_user.php"
+							+ "?login=" + mEncodeLogin
+							+ "&pass=" + mEncodePass,
+							getString(R.string.enter), 
+							DownloadFragment.CHECK_USER, 
+							LoginActivity.this);
+					FragmentManager fragmentManager = getSupportFragmentManager();
+					fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+					
+					/*DownloadData tDownloadData = new DownloadData(DownloadData.CHECK_USER, LoginActivity.this);
+					tDownloadData.setLoginActivity(LoginActivity.this);
+					tDownloadData.execute(getString(R.string.server_address) + "check_user.php"
+							+ "?login=" + mEncodeLogin
+							+ "&pass=" + mEncodePass);*/
+				}
+			}
+		});
+		
+		Button tRegButton = (Button)findViewById(R.id.register_btn);
+		tRegButton.setOnClickListener(new View.OnClickListener()
+		{	
+			@Override
+			public void onClick(View v) 
+			{
+				setResult(RESULT_OK);
+				finish();
+				
+			}
+		});
+	}
+
+	public void loginSuccess(Long uid)
+	{
+		mSavedData.saveNewUserData(uid, mEncodeLogin, mEncodePass);
+		setResult(MainControlBarActivity.CHECK_PROFILE);
+		finish();
+	}
+	
+	public void loginFailed()
+	{
+		ErrorFragment fragment = new ErrorFragment(getString(R.string.login_error));
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction().replace(android.R.id.content, fragment).commit();
+	}
+	/**
+	 * Set up the {@link android.app.ActionBar}, if the API is available.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void setupActionBar() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.login, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+
+}

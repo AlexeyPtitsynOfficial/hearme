@@ -1,0 +1,1 @@
+http://jgilfelt.github.io/android-actionbarstylegenerator/#name=hearme&compat=appcompat&theme=light_dark&actionbarstyle=solid&texture=0&hairline=0&backColor=112024%2C100&secondaryColor=1a3a4f%2C100&tabColor=a3d6e9%2C100&tertiaryColor=12252b%2C100&accentColor=e0f9fb%2C100&cabBackColor=0e313e%2C100&cabHighlightColor=c2edfd%2C100
